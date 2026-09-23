@@ -33,14 +33,14 @@ interface ShopItem {
 }
 
 const shopItems: ShopItem[] = [
-  { id: 'fig1', name: 'Figur 1', price: 5000, image: fig1 },
-  { id: 'fig2', name: 'Figur 2', price: 5800, image: fig2 },
-  { id: 'fig3', name: 'Figur 3', price: 6600, image: fig3 },
-  { id: 'fig4', name: 'Figur 4', price: 7400, image: fig4 },
-  { id: 'fig5', name: 'Figur 5', price: 8200, image: fig5 },
-  { id: 'fig6', name: 'Figur 6', price: 9000, image: fig6 },
-  { id: 'fig7', name: 'Figur 7', price: 9600, image: fig7 },
-  { id: 'fig9', name: 'Figur 9', price: 10000, image: fig9 },
+  { id: 'fig1', name: 'Figur 1', price: 500, image: fig1 },
+  { id: 'fig2', name: 'Figur 2', price: 700, image: fig2 },
+  { id: 'fig3', name: 'Figur 3', price: 900, image: fig3 },
+  { id: 'fig4', name: 'Figur 4', price: 1100, image: fig4 },
+  { id: 'fig5', name: 'Figur 5', price: 1300, image: fig5 },
+  { id: 'fig6', name: 'Figur 6', price: 1500, image: fig6 },
+  { id: 'fig7', name: 'Figur 7', price: 1650, image: fig7 },
+  { id: 'fig9', name: 'Figur 9', price: 1800, image: fig9 },
 ];
 
 export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView }) => {
