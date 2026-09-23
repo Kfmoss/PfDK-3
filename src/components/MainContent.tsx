@@ -14,6 +14,12 @@ import fig5 from '../assets/fig5.png';
 import fig6 from '../assets/fig6.png';
 import fig7 from '../assets/fig7.png';
 import fig9 from '../assets/fig9.png';
+import fig10 from '../assets/fig10.png';
+import fig11 from '../assets/fig11.png';
+import fig12 from '../assets/fig12.png';
+import fig13 from '../assets/fig13.png';
+import fig14 from '../assets/fig14.png';
+import fig15 from '../assets/fig15.png';
 
 // Mock-data for bruker
 interface UserStatus {
@@ -43,6 +49,12 @@ const shopItems: ShopItem[] = [
   { id: 'fig6', name: 'Figur 6', price: 1500, image: fig6 },
   { id: 'fig7', name: 'Figur 7', price: 1650, image: fig7 },
   { id: 'fig9', name: 'Figur 9', price: 1800, image: fig9 },
+  { id: 'fig10', name: 'Figur 10', price: 600, image: fig10 },
+  { id: 'fig11', name: 'Figur 11', price: 800, image: fig11 },
+  { id: 'fig12', name: 'Figur 12', price: 1000, image: fig12 },
+  { id: 'fig13', name: 'Figur 13', price: 1200, image: fig13 },
+  { id: 'fig14', name: 'Figur 14', price: 1500, image: fig14 },
+  { id: 'fig15', name: 'Figur 15', price: 1750, image: fig15 },
 ];
 
 export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView }) => {
@@ -53,6 +65,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
     unlockedOutfit: 'Klassisk Genser',
   });
   const [ownedItems, setOwnedItems] = useState<string[]>([]);
+  const [activeOutfit, setActiveOutfit] = useState<ShopItem | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameAnswer, setGameAnswer] = useState('');
   const [gameStartedAt, setGameStartedAt] = useState(0);
@@ -77,6 +90,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
       points: currentUser.points - item.price,
       unlockedOutfit: item.name,
     }));
+    setActiveOutfit(item);
     setOwnedItems((currentItems) => [...currentItems, item.id]);
   };
 
@@ -258,7 +272,13 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
         <div className={styles.scoreBoard}>
           <div className={styles.stat}><span className={styles.label}>Nivå:</span> <span className={styles.value}>{user.level}</span></div>
           <div className={styles.stat}><span className={styles.label}>Poeng:</span> <span className={styles.value}>{user.points}</span></div>
-          <div className={styles.stat}><span className={styles.label}>Antrekk:</span> <span className={styles.value}>{user.unlockedOutfit}</span></div>
+          <div className={`${styles.stat} ${styles.outfitStat}`}>
+            <span className={styles.label}>Antrekk:</span>
+            <span className={styles.outfitValue}>
+              {activeOutfit && <img src={activeOutfit.image} alt={activeOutfit.name} className={styles.headerOutfitImage} />}
+              <span className={styles.value}>{user.unlockedOutfit}</span>
+            </span>
+          </div>
         </div>
         <button type="button" className={styles.shopBtn} onClick={() => onSetView('shop')}><Wand2 /> Til Capybara-Butikken</button>
       </header>

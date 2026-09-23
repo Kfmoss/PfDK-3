@@ -125,6 +125,20 @@
   font-weight: bold;
 }
 
+.outfitValue {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.headerOutfitImage {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  border-radius: 8px;
+  background-color: #fff8ef;
+}
+
 .shopBtn {
   display: flex;
   align-items: center;
