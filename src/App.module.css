@@ -88,6 +88,7 @@
 /* --- MAIN CONTENT STYLES --- */
 .mainContent {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   background-color: var(--color-primary-bg);
@@ -138,6 +139,7 @@
 
 .contentArea {
   flex: 1;
+  min-height: 0;
   overflow-y: auto; /* Rullbar hoveddel */
   padding: 2rem;
 }
@@ -556,6 +558,9 @@
 @media (max-width: 768px) {
   .appContainer{
     flex-direction: column; /* Stable sidebar over content på mobil */
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
   }
 
   .sidebar {
@@ -598,6 +603,7 @@
 
   .contentArea {
     padding: 1rem;
+    overflow: visible;
   }
 
   .actionCards {
