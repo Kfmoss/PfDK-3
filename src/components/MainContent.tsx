@@ -1,7 +1,9 @@
 // src/components/MainContent.tsx
 import React, { useState } from 'react';
+import type { FormEvent } from 'react';
 import styles from '../App.module.css';
 import logo from '../assets/mat_capybara_logo.png'; // Husk å legge logoen her
+import gameBoard from '../assets/Oppgave_2_uke37.jpg';
 import { Zap, Play, ChevronRight, Wand2 } from 'lucide-react';
 import { Assessment } from './Assessment';
 import fig1 from '../assets/fig1.png';
@@ -51,6 +53,11 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
     unlockedOutfit: 'Klassisk Genser',
   });
   const [ownedItems, setOwnedItems] = useState<string[]>([]);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameAnswer, setGameAnswer] = useState('');
+  const [gameStartedAt, setGameStartedAt] = useState(0);
+  const [gameCompleted, setGameCompleted] = useState(false);
+  const [gameFeedback, setGameFeedback] = useState<'idle' | 'wrong' | 'correct'>('idle');
 
   const startAssessment = () => {
     setUser((currentUser) => ({ ...currentUser, level: 1, points: 0 }));
@@ -71,6 +78,84 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
       unlockedOutfit: item.name,
     }));
     setOwnedItems((currentItems) => [...currentItems, item.id]);
+  };
+
+  const startMathGame = () => {
+    setGameAnswer('');
+    setGameStartedAt(Date.now());
+    setGameCompleted(false);
+    setGameFeedback('idle');
+    setGameStarted(true);
+  };
+
+  const submitMathGameAnswer = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (gameCompleted) {
+      return;
+    }
+
+    if (Number(gameAnswer.trim()) !== 2) {
+      setGameFeedback('wrong');
+      setGameAnswer('');
+      return;
+    }
+
+    const elapsedSeconds = (Date.now() - gameStartedAt) / 1000;
+    const points = Math.max(10, Math.round(100 - elapsedSeconds * 3));
+    setUser((currentUser) => ({ ...currentUser, points: currentUser.points + points }));
+    setGameCompleted(true);
+    setGameFeedback('correct');
+  };
+
+  const renderMathGame = () => {
+    if (!gameStarted) {
+      return (
+        <div className={styles.mathGamePage}>
+          <div className={styles.mathGameIntro}>
+            <span className={styles.assessmentEyebrow}>Matalek / Spill</span>
+            <h1>Finn riktig togstrekning</h1>
+            <p>Tell hvor mange spor som går mellom to byer på brettet.</p>
+          </div>
+          <button type="button" className={styles.assessmentPrimaryButton} onClick={startMathGame}>
+            Start utfordringen
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div className={styles.mathGamePage}>
+        <div className={styles.mathGameIntro}>
+          <span className={styles.assessmentEyebrow}>Matalek / Spill</span>
+          <h1>Finn riktig togstrekning</h1>
+          <p>Hvor mange spor går direkte mellom <strong>London</strong> og <strong>Amsterdam</strong>?</p>
+        </div>
+        <div className={styles.mathGameImageFrame}>
+          <img src={gameBoard} alt="Brett med byer og togstrekninger" className={styles.mathGameImage} />
+        </div>
+        <form className={styles.mathGameForm} onSubmit={submitMathGameAnswer}>
+          <label htmlFor="gameAnswer">Antall spor</label>
+          <input
+            id="gameAnswer"
+            type="number"
+            min="0"
+            step="1"
+            value={gameAnswer}
+            onChange={(event) => setGameAnswer(event.target.value)}
+            placeholder="Skriv antall spor"
+            autoFocus
+            required
+            disabled={gameCompleted}
+          />
+          <button type="submit" className={styles.assessmentPrimaryButton} disabled={gameCompleted}>
+            Sjekk svaret
+          </button>
+        </form>
+        {gameFeedback === 'wrong' && <p className={styles.mathGameError}>Det var ikke riktig. Tell sporene en gang til.</p>}
+        {gameFeedback === 'correct' && <p className={styles.mathGameSuccess}>Riktig svar! Du fikk poeng basert på svartiden.</p>}
+        {gameCompleted && <button type="button" className={styles.assessmentSecondaryButton} onClick={startMathGame}>Spill på nytt</button>}
+      </div>
+    );
   };
 
   const renderShop = () => (
@@ -154,13 +239,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
           </div>
         );
       case 'math_play':
-        return (
-          <div className={styles.page}>
-            <h1>MatteMagi / Spill</h1>
-            <p>Kjappe, tilfeldige oppgaver for å tjene ekstra poeng!</p>
-            <button className={styles.gameBtn}><Play /> Start Tilfeldig Utfordring</button>
-          </div>
-        );
+        return renderMathGame();
       default:
         return (
           <div className={styles.page}>

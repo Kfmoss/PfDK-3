@@ -333,6 +333,95 @@
   cursor: not-allowed;
 }
 
+.mathGamePage {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.mathGameIntro {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.mathGameIntro h1 {
+  margin: 0.5rem 0;
+  font-size: 2.25rem;
+}
+
+.mathGameIntro p {
+  margin: 0;
+  color: #765e52;
+}
+
+.mathGameImageFrame {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background-color: var(--color-white);
+  border: 1px solid #eadfd8;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.mathGameImage {
+  display: block;
+  width: 100%;
+  max-height: 58vh;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.mathGameForm {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.mathGameForm label {
+  font-weight: bold;
+}
+
+.mathGameForm input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #d8cbc4;
+  border-radius: 10px;
+  color: var(--color-text);
+  font: inherit;
+  text-align: center;
+}
+
+.mathGameForm input:focus {
+  outline: 3px solid rgba(129, 199, 132, 0.3);
+  border-color: var(--color-card-primary);
+}
+
+.mathGameForm input:disabled {
+  background-color: #f5eee9;
+}
+
+.mathGameError,
+.mathGameSuccess {
+  max-width: 420px;
+  margin: 1rem auto 0;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.mathGameError {
+  background-color: #fff0ed;
+  border: 1px solid #f0c8bd;
+  color: #9b493c;
+}
+
+.mathGameSuccess {
+  background-color: #edf8ed;
+  border: 1px solid #c5e6c6;
+  color: #386b3b;
+}
+
 .assessmentWithLogo {
   display: flex;
   align-items: center;
@@ -613,6 +702,14 @@
 
   .assessmentCard {
     padding: 1.5rem;
+  }
+
+  .mathGameIntro h1 {
+    font-size: 1.75rem;
+  }
+
+  .mathGameImage {
+    max-height: none;
   }
 
   .assessmentWithLogo {
