@@ -1,7 +1,7 @@
 // src/components/MainContent.tsx
 import React, { useState } from 'react';
 import styles from '../App.module.css';
-import logo from '../assets/mat_capybara_logo.jpg'; // Husk å legge logoen her
+import logo from '../assets/mat_capybara_logo.png'; // Husk å legge logoen her
 import { Zap, Play, ChevronRight, Wand2 } from 'lucide-react';
 import { Assessment } from './Assessment';
 
