@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import styles from '../App.module.css';
 import logo from '../assets/mat_capybara_logo.jpg'; // Husk å legge logoen her
 import { Zap, Play, ChevronRight, Wand2 } from 'lucide-react';
+import { Assessment } from './Assessment';
 
 // Mock-data for bruker
 interface UserStatus {
@@ -51,13 +52,11 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
             </div>
           </div>
         );
+      case 'mapping':
       case 'assessment':
         return (
-          <div className={styles.page}>
-            <h1>Kartleggingstest</h1>
-            <p>Velkommen! Vi skal stille deg noen spørsmål for å se hvor du står.</p>
-            {/* Her vil selve test-komponenten leve */}
-            <div className={styles.mockTest}>[ Kartleggingstest-grensesnitt her ]</div>
+          <div className={styles.assessmentPage}>
+            <Assessment />
           </div>
         );
       case 'topics':
