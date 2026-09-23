@@ -19,11 +19,19 @@ interface MainContentProps {
 
 export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView }) => {
   // Mock-tilstand for spill-elementer
-  const [user] = useState<UserStatus>({
+  const [user, setUser] = useState<UserStatus>({
     points: 1250,
     level: 5,
     unlockedOutfit: 'Klassisk Genser',
   });
+
+  const startAssessment = () => {
+    setUser((currentUser) => ({ ...currentUser, level: 1, points: 0 }));
+  };
+
+  const addAssessmentPoints = (points: number) => {
+    setUser((currentUser) => ({ ...currentUser, points: currentUser.points + points }));
+  };
 
   const renderContent = () => {
     switch (activeView) {
@@ -56,7 +64,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
       case 'assessment':
         return (
           <div className={styles.assessmentPage}>
-            <Assessment />
+            <Assessment onTestStart={startAssessment} onPointsEarned={addAssessmentPoints} />
           </div>
         );
       case 'topics':

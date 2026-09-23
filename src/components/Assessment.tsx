@@ -29,6 +29,12 @@ interface AnswerResult {
 	problem: MathProblem;
 	answer: string;
 	correct: boolean;
+	points: number;
+}
+
+interface AssessmentProps {
+	onTestStart: () => void;
+	onPointsEarned: (points: number) => void;
 }
 
 function parseAnswer(value: string): number {
@@ -40,18 +46,21 @@ function parseAnswer(value: string): number {
 	return Number.parseFloat(cleanValue);
 }
 
-export const Assessment: React.FC = () => {
+export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEarned }) => {
 	const [stage, setStage] = useState<TestStage>('start');
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [answer, setAnswer] = useState('');
 	const [results, setResults] = useState<AnswerResult[]>([]);
 	const [showExplanations, setShowExplanations] = useState(false);
+	const [questionStartedAt, setQuestionStartedAt] = useState(0);
 
 	const startTest = () => {
 		setCurrentIndex(0);
 		setAnswer('');
 		setResults([]);
 		setShowExplanations(false);
+		setQuestionStartedAt(Date.now());
+		onTestStart();
 		setStage('questions');
 	};
 
@@ -59,19 +68,27 @@ export const Assessment: React.FC = () => {
 		event.preventDefault();
 		const problem = mathProblems[currentIndex];
 		const parsedAnswer = parseAnswer(answer);
+		const correct = !Number.isNaN(parsedAnswer) && Math.abs(parsedAnswer - problem.answer) < 0.0001;
+		const elapsedSeconds = (Date.now() - questionStartedAt) / 1000;
+		const points = correct ? Math.max(10, Math.round(100 - elapsedSeconds * 3)) : 0;
 		const result: AnswerResult = {
 			problem,
 			answer,
-			correct: !Number.isNaN(parsedAnswer) && Math.abs(parsedAnswer - problem.answer) < 0.0001,
+			correct,
+			points,
 		};
 		const nextResults = [...results, result];
 
 		setResults(nextResults);
+		if (points > 0) {
+			onPointsEarned(points);
+		}
 		setAnswer('');
 		if (currentIndex === mathProblems.length - 1) {
 			setStage('results');
 		} else {
 			setCurrentIndex(currentIndex + 1);
+			setQuestionStartedAt(Date.now());
 		}
 	};
 
