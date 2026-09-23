@@ -21,6 +21,13 @@ const themes = [
   { id: 'geometry', name: 'Geometri', icon: BookOpenText },
   { id: 'economics', name: 'Økonomi', icon: BookOpenText },
   { id: 'statistics', name: 'Statistikk', icon: BookOpenText },
+  { separator: true, name: 'FAG' },
+  { id: 'subject_1t', name: '1T', icon: BookOpenText },
+  { id: 'subject_2t', name: '2T', icon: BookOpenText },
+  { id: 'subject_1p', name: '1P', icon: BookOpenText },
+  { id: 'subject_2p', name: '2P', icon: BookOpenText },
+  { id: 'subject_s1', name: 'S1', icon: BookOpenText },
+  { id: 'subject_s2', name: 'S2', icon: BookOpenText },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ onSelectItem, activeItem }) => {
