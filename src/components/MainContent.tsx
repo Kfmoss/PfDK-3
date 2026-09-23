@@ -20,8 +20,8 @@ interface MainContentProps {
 export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView }) => {
   // Mock-tilstand for spill-elementer
   const [user, setUser] = useState<UserStatus>({
-    points: 1250,
-    level: 5,
+    points: 0,
+    level: 1,
     unlockedOutfit: 'Klassisk Genser',
   });
 
