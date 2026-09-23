@@ -53,12 +53,14 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	const [results, setResults] = useState<AnswerResult[]>([]);
 	const [showExplanations, setShowExplanations] = useState(false);
 	const [questionStartedAt, setQuestionStartedAt] = useState(0);
+	const [totalPoints, setTotalPoints] = useState(0);
 
 	const startTest = () => {
 		setCurrentIndex(0);
 		setAnswer('');
 		setResults([]);
 		setShowExplanations(false);
+		setTotalPoints(0);
 		setQuestionStartedAt(Date.now());
 		onTestStart();
 		setStage('questions');
@@ -81,6 +83,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 
 		setResults(nextResults);
 		if (points > 0) {
+			setTotalPoints((currentPoints) => currentPoints + points);
 			onPointsEarned(points);
 		}
 		setAnswer('');
@@ -117,7 +120,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 			<section className={styles.assessmentCard}>
 				<div className={styles.assessmentProgressHeader}>
 					<span>Oppgave {currentIndex + 1} av {mathProblems.length}</span>
-					<span>{problem.category}</span>
+					<span>Poeng: {totalPoints} · {problem.category}</span>
 				</div>
 				<div className={styles.assessmentProgressTrack} aria-label={`Progresjon: ${currentIndex + 1} av ${mathProblems.length}`}>
 					<div className={styles.assessmentProgressBar} style={{ width: `${progress}%` }} />
