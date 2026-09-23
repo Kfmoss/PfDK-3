@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { FormEvent } from 'react';
 import styles from '../App.module.css';
+import logo from '../assets/mat_capybara_logo.png';
 
 interface MathProblem {
 	id: number;
@@ -24,6 +25,7 @@ const mathProblems: MathProblem[] = [
 ];
 
 type TestStage = 'start' | 'questions' | 'results';
+type LogoAnimation = 'idle' | 'correct' | 'incorrect';
 
 interface AnswerResult {
 	problem: MathProblem;
@@ -54,6 +56,12 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	const [showExplanations, setShowExplanations] = useState(false);
 	const [questionStartedAt, setQuestionStartedAt] = useState(0);
 	const [totalPoints, setTotalPoints] = useState(0);
+	const [logoAnimation, setLogoAnimation] = useState<LogoAnimation>('idle');
+
+	const animateLogo = (animation: Exclude<LogoAnimation, 'idle'>) => {
+		setLogoAnimation(animation);
+		window.setTimeout(() => setLogoAnimation('idle'), animation === 'correct' ? 650 : 2800);
+	};
 
 	const startTest = () => {
 		setCurrentIndex(0);
@@ -61,6 +69,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		setResults([]);
 		setShowExplanations(false);
 		setTotalPoints(0);
+		setLogoAnimation('idle');
 		setQuestionStartedAt(Date.now());
 		onTestStart();
 		setStage('questions');
@@ -82,6 +91,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		const nextResults = [...results, result];
 
 		setResults(nextResults);
+		animateLogo(correct ? 'correct' : 'incorrect');
 		if (points > 0) {
 			setTotalPoints((currentPoints) => currentPoints + points);
 			onPointsEarned(points);
@@ -97,18 +107,21 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 
 	if (stage === 'start') {
 		return (
-			<section className={styles.assessmentCard}>
-				<div className={styles.assessmentIntro}>
-					<span className={styles.assessmentEyebrow}>Kartleggingstest</span>
-					<h1>Grunnleggende regneferdigheter</h1>
-					<p>Testen består av 10 oppgaver med økende vanskelighetsgrad.</p>
-				</div>
-				<div className={styles.assessmentInfo}>
-					<p>Svar med heltall, desimaltall eller brøk, for eksempel <code>2/3</code>.</p>
-					<p>Du får ingen tilbakemelding underveis og kan bruke så lang tid du vil.</p>
-				</div>
-				<button type="button" className={styles.assessmentPrimaryButton} onClick={startTest}>Start testen</button>
-			</section>
+			<div className={styles.assessmentWithLogo}>
+				<img src={logo} alt="Mat-Capybara" className={styles.assessmentLogo} />
+				<section className={styles.assessmentCard}>
+					<div className={styles.assessmentIntro}>
+						<span className={styles.assessmentEyebrow}>Kartleggingstest</span>
+						<h1>Grunnleggende regneferdigheter</h1>
+						<p>Testen består av 10 oppgaver med økende vanskelighetsgrad.</p>
+					</div>
+					<div className={styles.assessmentInfo}>
+						<p>Svar med heltall, desimaltall eller brøk, for eksempel <code>2/3</code>.</p>
+						<p>Du får ingen tilbakemelding underveis og kan bruke så lang tid du vil.</p>
+					</div>
+					<button type="button" className={styles.assessmentPrimaryButton} onClick={startTest}>Start testen</button>
+				</section>
+			</div>
 		);
 	}
 
@@ -117,30 +130,37 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		const progress = ((currentIndex + 1) / mathProblems.length) * 100;
 
 		return (
-			<section className={styles.assessmentCard}>
-				<div className={styles.assessmentProgressHeader}>
-					<span>Oppgave {currentIndex + 1} av {mathProblems.length}</span>
-					<span>Poeng: {totalPoints} · {problem.category}</span>
-				</div>
-				<div className={styles.assessmentProgressTrack} aria-label={`Progresjon: ${currentIndex + 1} av ${mathProblems.length}`}>
-					<div className={styles.assessmentProgressBar} style={{ width: `${progress}%` }} />
-				</div>
-				<div className={styles.assessmentExpression} aria-live="polite">{problem.expression}</div>
-				<form className={styles.assessmentForm} onSubmit={handleAnswer}>
-					<label htmlFor="answerInput">Skriv svaret ditt</label>
-					<input
-						id="answerInput"
-						type="text"
-						value={answer}
-						onChange={(event) => setAnswer(event.target.value)}
-						placeholder="For eksempel 15 eller 3/4"
-						autoFocus
-						required
-						autoComplete="off"
-					/>
-					<button type="submit" className={styles.assessmentPrimaryButton}>Neste oppgave</button>
-				</form>
-			</section>
+			<div className={styles.assessmentWithLogo}>
+				<img
+					src={logo}
+					alt="Mat-Capybara"
+					className={`${styles.assessmentLogo} ${styles[`assessmentLogo${logoAnimation.charAt(0).toUpperCase()}${logoAnimation.slice(1)}`]}`}
+				/>
+				<section className={styles.assessmentCard}>
+					<div className={styles.assessmentProgressHeader}>
+						<span>Oppgave {currentIndex + 1} av {mathProblems.length}</span>
+						<span>Poeng: {totalPoints} · {problem.category}</span>
+					</div>
+					<div className={styles.assessmentProgressTrack} aria-label={`Progresjon: ${currentIndex + 1} av ${mathProblems.length}`}>
+						<div className={styles.assessmentProgressBar} style={{ width: `${progress}%` }} />
+					</div>
+					<div className={styles.assessmentExpression} aria-live="polite">{problem.expression}</div>
+					<form className={styles.assessmentForm} onSubmit={handleAnswer}>
+						<label htmlFor="answerInput">Skriv svaret ditt</label>
+						<input
+							id="answerInput"
+							type="text"
+							value={answer}
+							onChange={(event) => setAnswer(event.target.value)}
+							placeholder="For eksempel 15 eller 3/4"
+							autoFocus
+							required
+							autoComplete="off"
+						/>
+						<button type="submit" className={styles.assessmentPrimaryButton}>Neste oppgave</button>
+					</form>
+				</section>
+			</div>
 		);
 	}
 

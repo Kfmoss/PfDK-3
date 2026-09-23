@@ -237,6 +237,39 @@
   margin: 0 auto;
 }
 
+.assessmentWithLogo {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.assessmentLogo {
+  width: 150px;
+  height: auto;
+  flex: 0 0 150px;
+}
+
+.assessmentLogoCorrect {
+  animation: assessmentLogoShake 0.6s ease-in-out;
+}
+
+.assessmentLogoIncorrect {
+  animation: assessmentLogoShrink 2.8s ease-in-out forwards;
+}
+
+@keyframes assessmentLogoShake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  20% { transform: translateX(-8px) rotate(-5deg); }
+  40% { transform: translateX(8px) rotate(5deg); }
+  60% { transform: translateX(-6px) rotate(-3deg); }
+  80% { transform: translateX(6px) rotate(3deg); }
+}
+
+@keyframes assessmentLogoShrink {
+  0%, 100% { transform: scale(1); }
+  20%, 80% { transform: scale(0.72); }
+}
+
 .assessmentCard {
   background-color: var(--color-white);
   padding: 2.5rem;
@@ -480,6 +513,16 @@
 
   .assessmentCard {
     padding: 1.5rem;
+  }
+
+  .assessmentWithLogo {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .assessmentLogo {
+    width: 100px;
+    flex-basis: 100px;
   }
 
   .assessmentExpression {
