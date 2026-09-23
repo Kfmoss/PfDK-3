@@ -6,6 +6,7 @@ import logo from '../assets/mat_capybara_logo.png'; // Husk å legge logoen her
 import gameBoard from '../assets/Oppgave_2_uke37.jpg';
 import { Zap, Play, ChevronRight, Wand2 } from 'lucide-react';
 import { Assessment } from './Assessment';
+import { PowersPractice } from './PowersPractice';
 import fig1 from '../assets/fig1.png';
 import fig2 from '../assets/fig2.png';
 import fig3 from '../assets/fig3.png';
@@ -244,6 +245,12 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
         );
       case 'shop':
         return renderShop();
+      case 'numbers':
+        return (
+          <div className={styles.assessmentPage}>
+            <PowersPractice onPointsEarned={addAssessmentPoints} />
+          </div>
+        );
       case 'topics':
         return (
           <div className={styles.page}>

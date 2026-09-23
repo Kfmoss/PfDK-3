@@ -436,6 +436,126 @@
   color: #386b3b;
 }
 
+.powersPage {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  background-color: var(--color-white);
+  border: 1px solid #eadfd8;
+  border-radius: var(--border-radius);
+  box-shadow: 0 12px 28px rgba(93, 64, 55, 0.1);
+}
+
+.powersIntro,
+.powersHeader {
+  text-align: center;
+}
+
+.powersIntro h1,
+.powersHeader h1 {
+  margin: 0.5rem 0 1rem;
+  font-size: 2rem;
+}
+
+.powersIntro p {
+  margin: 0;
+  color: #765e52;
+}
+
+.powersInfo {
+  display: grid;
+  gap: 0.65rem;
+  margin: 2rem 0;
+  padding: 1rem 1.25rem;
+  background-color: #fff8ef;
+  border: 1px solid #f0dfcc;
+  border-radius: 12px;
+  color: #765e52;
+  font-size: 0.9rem;
+}
+
+.powersInfo p {
+  margin: 0;
+}
+
+.powersHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.powersHeader h1 {
+  margin-bottom: 0;
+}
+
+.powersHeader > strong {
+  color: var(--color-active);
+  white-space: nowrap;
+}
+
+.powersQuestion {
+  margin: 3rem 0;
+  color: var(--color-text);
+  font-family: Consolas, monospace;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.powersForm {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.powersForm label {
+  font-weight: bold;
+}
+
+.powersForm input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #d8cbc4;
+  border-radius: 10px;
+  color: var(--color-text);
+  font: inherit;
+  text-align: center;
+}
+
+.powersForm input:focus {
+  outline: 3px solid rgba(129, 199, 132, 0.3);
+  border-color: var(--color-card-primary);
+}
+
+.powersCorrect,
+.powersWrong {
+  max-width: 420px;
+  margin: 1.25rem auto 0;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.powersCorrect {
+  background-color: #edf8ed;
+  border: 1px solid #c5e6c6;
+  color: #386b3b;
+}
+
+.powersWrong {
+  background-color: #fff0ed;
+  border: 1px solid #f0c8bd;
+  color: #9b493c;
+}
+
+.powersCorrect p,
+.powersWrong p {
+  margin: 0.65rem 0 1rem;
+  line-height: 1.5;
+}
+
 .assessmentWithLogo {
   display: flex;
   align-items: center;
@@ -716,6 +836,24 @@
 
   .assessmentCard {
     padding: 1.5rem;
+  }
+
+  .powersPage {
+    padding: 1.5rem;
+  }
+
+  .powersHeader {
+    display: block;
+  }
+
+  .powersHeader > strong {
+    display: block;
+    margin-top: 0.75rem;
+  }
+
+  .powersQuestion {
+    margin: 2.5rem 0;
+    font-size: 1.6rem;
   }
 
   .mathGameIntro h1 {
