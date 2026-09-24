@@ -37,6 +37,7 @@ interface AnswerResult {
 interface AssessmentProps {
 	onTestStart: () => void;
 	onPointsEarned: (points: number) => void;
+	onNavigateToAlgebra: () => void;
 }
 
 function parseAnswer(value: string): number {
@@ -48,7 +49,7 @@ function parseAnswer(value: string): number {
 	return Number.parseFloat(cleanValue);
 }
 
-export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEarned }) => {
+export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEarned, onNavigateToAlgebra }) => {
 	const [stage, setStage] = useState<TestStage>('start');
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [answer, setAnswer] = useState('');
@@ -61,6 +62,41 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	const animateLogo = (animation: Exclude<LogoAnimation, 'idle'>) => {
 		setLogoAnimation(animation);
 		window.setTimeout(() => setLogoAnimation('idle'), animation === 'correct' ? 650 : 2800);
+	};
+
+	const renderPopcornPipe = (correctCount: number) => {
+		const pipeTone = correctCount >= 8
+			? styles.popcornPipeBlack
+			: correctCount >= 4
+				? styles.popcornPipeRed
+				: styles.popcornPipeGreen;
+
+		return (
+			<div className={styles.popcornProgress}>
+				<div className={styles.popcornProgressHeader}>
+					<strong>Popcornrør</strong>
+					<span>{correctCount} av {mathProblems.length} riktige</span>
+				</div>
+				<div
+					className={`${styles.popcornPipe} ${pipeTone}`}
+					role="progressbar"
+					aria-label={`Popcornrør: ${correctCount} av ${mathProblems.length} riktige svar`}
+					aria-valuemin={0}
+					aria-valuemax={mathProblems.length}
+					aria-valuenow={correctCount}
+				>
+					{Array.from({ length: mathProblems.length }, (_, index) => (
+						<span
+							className={`${styles.popcornPiece} ${index < correctCount ? styles.popcornPieceFilled : ''}`}
+							key={index}
+							aria-hidden="true"
+						>
+							{index < correctCount ? '●' : ''}
+						</span>
+					))}
+				</div>
+			</div>
+		);
 	};
 
 	const startTest = () => {
@@ -128,6 +164,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	if (stage === 'questions') {
 		const problem = mathProblems[currentIndex];
 		const progress = ((currentIndex + 1) / mathProblems.length) * 100;
+		const correctCount = results.filter((result) => result.correct).length;
 
 		return (
 			<div className={styles.assessmentWithLogo}>
@@ -144,6 +181,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 					<div className={styles.assessmentProgressTrack} aria-label={`Progresjon: ${currentIndex + 1} av ${mathProblems.length}`}>
 						<div className={styles.assessmentProgressBar} style={{ width: `${progress}%` }} />
 					</div>
+					{renderPopcornPipe(correctCount)}
 					<div className={styles.assessmentExpression} aria-live="polite">{problem.expression}</div>
 					<form className={styles.assessmentForm} onSubmit={handleAnswer}>
 						<label htmlFor="answerInput">Skriv svaret ditt</label>
@@ -166,6 +204,12 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 
 	const correctCount = results.filter((result) => result.correct).length;
 	const incorrectResults = results.filter((result) => !result.correct);
+	const recommendedLevel = correctCount <= 3 ? 1 : correctCount <= 7 ? 2 : 3;
+	const recommendationText = correctCount <= 3
+		? 'Start med nivå 1, den grønne og flate løypa.'
+		: correctCount <= 7
+			? 'Prøv nivå 2, den røde og brattere løypa.'
+			: 'Du kan prøve nivå 3, den svarte og mest krevende løypa.';
 
 	return (
 		<section className={styles.assessmentCard}>
@@ -192,6 +236,14 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 			) : (
 				<p className={styles.assessmentSuccess}>Fantastisk jobbet! Du svarte riktig på alle oppgavene.</p>
 			)}
+			<div className={styles.assessmentRecommendation}>
+				<span className={styles.assessmentEyebrow}>Anbefalt videre</span>
+				<h2>Nivå {recommendedLevel} i Tall og algebra</h2>
+				<p>{recommendationText}</p>
+				<button type="button" className={styles.assessmentPrimaryButton} onClick={onNavigateToAlgebra}>
+					Gå til Tall og algebra
+				</button>
+			</div>
 			<button type="button" className={styles.assessmentPrimaryButton} onClick={startTest}>Ta testen på nytt</button>
 		</section>
 	);

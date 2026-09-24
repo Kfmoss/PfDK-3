@@ -925,6 +925,69 @@
   transition: width 0.3s ease;
 }
 
+.popcornProgress {
+  margin-top: 1.25rem;
+}
+
+.popcornProgressHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  color: #8d6e63;
+  font-size: 0.8rem;
+}
+
+.popcornPipe {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0.2rem;
+  min-height: 3rem;
+  padding: 0.35rem;
+  border: 5px solid;
+  border-radius: 999px;
+  background-color: #fff8ef;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.popcornPipeGreen {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+}
+
+.popcornPipeRed {
+  border-color: #c62828;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+}
+
+.popcornPipeBlack {
+  border-color: #171717;
+  box-shadow: 0 0 0 3px rgba(23, 23, 23, 0.15);
+}
+
+.popcornPiece {
+  display: grid;
+  min-width: 0;
+  min-height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  color: transparent;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.popcornPieceFilled {
+  color: #f5a623;
+  text-shadow: 0 1px 0 #d17c00;
+  animation: popcornFill 0.45s ease-out both;
+}
+
+@keyframes popcornFill {
+  0% { opacity: 0; transform: scale(0.2) rotate(-20deg); }
+  70% { opacity: 1; transform: scale(1.2) rotate(8deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
 .assessmentExpression {
   padding: 3.5rem 0;
   color: var(--color-text);
@@ -1000,6 +1063,27 @@
   border: 1px solid #c5e6c6;
   border-radius: 10px;
   color: #386b3b;
+}
+
+.assessmentRecommendation {
+  margin: 2rem 0 1.25rem;
+  padding: 1.25rem;
+  border: 3px solid var(--color-card-secondary);
+  border-radius: 12px;
+  background-color: #fff8ef;
+  box-shadow: 0 8px 18px rgba(93, 64, 55, 0.12);
+  text-align: center;
+}
+
+.assessmentRecommendation h2 {
+  margin: 0.35rem 0 0.5rem;
+  color: var(--color-text);
+  font-size: 1.35rem;
+}
+
+.assessmentRecommendation p {
+  margin-bottom: 1rem;
+  color: #765e52;
 }
 
 .gameBtn {

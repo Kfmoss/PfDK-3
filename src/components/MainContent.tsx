@@ -253,7 +253,11 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
       case 'assessment':
         return (
           <div className={styles.assessmentPage}>
-            <Assessment onTestStart={startAssessment} onPointsEarned={addAssessmentPoints} />
+            <Assessment
+              onTestStart={startAssessment}
+              onPointsEarned={addAssessmentPoints}
+              onNavigateToAlgebra={() => onSetView('numbers')}
+            />
           </div>
         );
       case 'shop':
