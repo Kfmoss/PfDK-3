@@ -15,7 +15,7 @@ const themes = [
   { id: 'math_play', name: 'Matalek / Spill', icon: BrainCircuit },
   { id: 'videos', name: 'Videoer', icon: Tv },
   { id: 'exam', name: 'Eksamensoppgaver', icon: FileQuestion },
-  { separator: true, name: 'TEMAER' },
+  { separator: true, name: 'TEMAOPPGAVER' },
   { id: 'numbers', name: 'Tall og algebra', icon: BookOpenText },
   { id: 'functions', name: 'Funksjoner & Modellering', icon: BookOpenText },
   { id: 'geometry', name: 'Geometri', icon: BookOpenText },

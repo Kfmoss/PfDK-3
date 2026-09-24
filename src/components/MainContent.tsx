@@ -129,7 +129,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
       return (
         <div className={styles.mathGamePage}>
           <div className={styles.mathGameIntro}>
-            <span className={styles.assessmentEyebrow}>Matalek / Spill</span>
+            <span className={styles.assessmentEyebrow}>Mattelek / Spill</span>
             <h1>Finn riktig togstrekning</h1>
             <p>Tell hvor mange spor som går mellom to byer på brettet.</p>
           </div>
