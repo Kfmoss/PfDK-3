@@ -12,7 +12,7 @@ interface SidebarProps {
 const themes = [
   { id: 'start', name: 'Startside', icon: LayoutDashboard },
   { id: 'mapping', name: 'Kartleggingstester', icon: Target },
-  { id: 'math_play', name: 'Matalek / Spill', icon: BrainCircuit },
+  { id: 'math_play', name: 'Mattelek / Spill', icon: BrainCircuit },
   { id: 'videos', name: 'Videoer', icon: Tv },
   { id: 'exam', name: 'Eksamensoppgaver', icon: FileQuestion },
   { separator: true, name: 'TEMAOPPGAVER' },
