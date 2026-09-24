@@ -824,6 +824,25 @@
     align-items: flex-start;
   }
 
+  .scoreBoard {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .outfitStat {
+    flex: 0 0 auto;
+  }
+
+  .outfitValue {
+    min-width: max-content;
+  }
+
+  .headerOutfitImage {
+    display: block;
+    flex: 0 0 42px;
+  }
+
   .contentArea {
     padding: 1rem;
     overflow: visible;
