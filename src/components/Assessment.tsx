@@ -64,41 +64,6 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		window.setTimeout(() => setLogoAnimation('idle'), animation === 'correct' ? 650 : 2800);
 	};
 
-	const renderPopcornPipe = (correctCount: number) => {
-		const pipeTone = correctCount >= 8
-			? styles.popcornPipeBlack
-			: correctCount >= 4
-				? styles.popcornPipeRed
-				: styles.popcornPipeGreen;
-
-		return (
-			<div className={styles.popcornProgress}>
-				<div className={styles.popcornProgressHeader}>
-					<strong>Popcornrør</strong>
-					<span>{correctCount} av {mathProblems.length} riktige</span>
-				</div>
-				<div
-					className={`${styles.popcornPipe} ${pipeTone}`}
-					role="progressbar"
-					aria-label={`Popcornrør: ${correctCount} av ${mathProblems.length} riktige svar`}
-					aria-valuemin={0}
-					aria-valuemax={mathProblems.length}
-					aria-valuenow={correctCount}
-				>
-					{Array.from({ length: mathProblems.length }, (_, index) => (
-						<span
-							className={`${styles.popcornPiece} ${index < correctCount ? styles.popcornPieceFilled : ''}`}
-							key={index}
-							aria-hidden="true"
-						>
-							{index < correctCount ? '●' : ''}
-						</span>
-					))}
-				</div>
-			</div>
-		);
-	};
-
 	const startTest = () => {
 		setCurrentIndex(0);
 		setAnswer('');
@@ -164,7 +129,6 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	if (stage === 'questions') {
 		const problem = mathProblems[currentIndex];
 		const progress = ((currentIndex + 1) / mathProblems.length) * 100;
-		const correctCount = results.filter((result) => result.correct).length;
 
 		return (
 			<div className={styles.assessmentWithLogo}>
@@ -181,7 +145,6 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 					<div className={styles.assessmentProgressTrack} aria-label={`Progresjon: ${currentIndex + 1} av ${mathProblems.length}`}>
 						<div className={styles.assessmentProgressBar} style={{ width: `${progress}%` }} />
 					</div>
-					{renderPopcornPipe(correctCount)}
 					<div className={styles.assessmentExpression} aria-live="polite">{problem.expression}</div>
 					<form className={styles.assessmentForm} onSubmit={handleAnswer}>
 						<label htmlFor="answerInput">Skriv svaret ditt</label>

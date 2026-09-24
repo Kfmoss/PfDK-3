@@ -90,6 +90,7 @@ export const PowersPractice: React.FC<PowersPracticeProps> = ({ onPointsEarned }
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [totalPoints, setTotalPoints] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
   const [questionStartedAt, setQuestionStartedAt] = useState(0);
 
   const startPractice = (level: AlgebraLevel) => {
@@ -99,6 +100,7 @@ export const PowersPractice: React.FC<PowersPracticeProps> = ({ onPointsEarned }
     setAnswer('');
     setFeedback(null);
     setTotalPoints(0);
+    setCorrectAnswers(0);
     setQuestionStartedAt(Date.now());
   };
 
@@ -119,6 +121,7 @@ export const PowersPractice: React.FC<PowersPracticeProps> = ({ onPointsEarned }
     const elapsedSeconds = (Date.now() - questionStartedAt) / 1000;
     const points = Math.max(10, Math.round(100 - elapsedSeconds * 3));
     setFeedback({ correct: true, points });
+    setCorrectAnswers((currentAnswers) => currentAnswers + 1);
     setTotalPoints((currentPoints) => currentPoints + points);
     onPointsEarned(points);
   };
@@ -137,6 +140,41 @@ export const PowersPractice: React.FC<PowersPracticeProps> = ({ onPointsEarned }
     setAnswer('');
     setFeedback(null);
     setQuestionStartedAt(Date.now());
+  };
+
+  const renderPopcornPipe = () => {
+    const pipeTone = correctAnswers >= 8
+      ? styles.popcornPipeBlack
+      : correctAnswers >= 4
+        ? styles.popcornPipeRed
+        : styles.popcornPipeGreen;
+
+    return (
+      <div className={styles.popcornProgress}>
+        <div className={styles.popcornProgressHeader}>
+          <strong>Popcornrør</strong>
+          <span>{correctAnswers} av {selectedLevel?.tasks.length ?? 10} riktige</span>
+        </div>
+        <div
+          className={`${styles.popcornPipe} ${pipeTone}`}
+          role="progressbar"
+          aria-label={`Popcornrør: ${correctAnswers} av ${selectedLevel?.tasks.length ?? 10} riktige svar`}
+          aria-valuemin={0}
+          aria-valuemax={selectedLevel?.tasks.length ?? 10}
+          aria-valuenow={correctAnswers}
+        >
+          {Array.from({ length: selectedLevel?.tasks.length ?? 10 }, (_, index) => (
+            <span
+              className={`${styles.popcornPiece} ${index < correctAnswers ? styles.popcornPieceFilled : ''}`}
+              key={index}
+              aria-hidden="true"
+            >
+              {index < correctAnswers ? '●' : ''}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   if (!started || !selectedLevel) {
@@ -171,7 +209,8 @@ export const PowersPractice: React.FC<PowersPracticeProps> = ({ onPointsEarned }
   const isLastTask = currentIndex === selectedLevel.tasks.length - 1;
 
   return (
-    <div className={styles.powersPage}>
+    <div className={styles.powersPracticeLayout}>
+      <div className={styles.powersPage}>
       <div className={styles.powersHeader}>
         <div>
           <span className={styles.assessmentEyebrow}>{selectedLevel.name} - oppgave {currentIndex + 1} av {selectedLevel.tasks.length}</span>
@@ -212,6 +251,8 @@ export const PowersPractice: React.FC<PowersPracticeProps> = ({ onPointsEarned }
           )}
         </div>
       )}
+      </div>
+      {renderPopcornPipe()}
     </div>
   );
 };
