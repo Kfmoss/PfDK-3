@@ -67,6 +67,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
   });
   const [ownedItems, setOwnedItems] = useState<string[]>([]);
   const [activeOutfit, setActiveOutfit] = useState<ShopItem | null>(null);
+  const [purchaseCelebration, setPurchaseCelebration] = useState<ShopItem | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameAnswer, setGameAnswer] = useState('');
   const [gameStartedAt, setGameStartedAt] = useState(0);
@@ -92,6 +93,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
       unlockedOutfit: item.name,
     }));
     setActiveOutfit(item);
+    setPurchaseCelebration(item);
     setOwnedItems((currentItems) => [...currentItems, item.id]);
   };
 
@@ -180,6 +182,17 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
         <h1>Velg din neste figur</h1>
         <p>Bruk poengene dine på nye antrekk og figurer.</p>
       </div>
+      {purchaseCelebration && (
+        <div className={styles.shopCelebration} key={purchaseCelebration.id} aria-live="polite">
+          <span className={`${styles.celebrationStar} ${styles.celebrationStarOne}`} aria-hidden="true">*</span>
+          <span className={`${styles.celebrationStar} ${styles.celebrationStarTwo}`} aria-hidden="true">+</span>
+          <span className={`${styles.celebrationStar} ${styles.celebrationStarThree}`} aria-hidden="true">*</span>
+          <div className={styles.celebrationCapybara}>
+            <span className={styles.celebrationName}>{purchaseCelebration.name}</span>
+            <img src={purchaseCelebration.image} alt="" />
+          </div>
+        </div>
+      )}
       <div className={styles.shopGrid}>
         {shopItems.map((item) => {
           const isOwned = ownedItems.includes(item.id);

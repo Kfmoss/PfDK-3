@@ -273,6 +273,125 @@
   color: #765e52;
 }
 
+.shopCelebration {
+  position: relative;
+  height: 190px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border: 3px solid var(--color-card-secondary);
+  border-radius: var(--border-radius);
+  background: linear-gradient(135deg, #fff8ef, #fff0d0);
+  box-shadow: var(--shadow);
+}
+
+.shopCelebration::before,
+.shopCelebration::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background-color: var(--color-card-secondary);
+  content: '';
+}
+
+.shopCelebration::before {
+  left: 0;
+}
+
+.shopCelebration::after {
+  right: 0;
+}
+
+.celebrationCapybara {
+  position: absolute;
+  top: 2.25rem;
+  left: 0;
+  display: flex;
+  width: 130px;
+  flex-direction: column;
+  align-items: center;
+  animation: capybaraBounce 4s ease-in-out infinite alternate;
+  transform-origin: center bottom;
+}
+
+.celebrationCapybara img {
+  display: block;
+  width: 105px;
+  height: 105px;
+  object-fit: contain;
+}
+
+.celebrationName {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background-color: var(--color-card-primary);
+  color: var(--color-white);
+  font-size: 0.85rem;
+  font-weight: bold;
+  white-space: nowrap;
+  animation: nameFloat 1.2s ease-in-out infinite alternate;
+}
+
+.celebrationStar {
+  position: absolute;
+  z-index: 1;
+  color: #f5a623;
+  font-size: 2rem;
+  font-weight: bold;
+  animation: starTwinkle 1s ease-in-out infinite alternate;
+}
+
+.celebrationStarOne {
+  top: 1rem;
+  left: 22%;
+}
+
+.celebrationStarTwo {
+  top: 4.5rem;
+  left: 51%;
+  animation-delay: 0.25s;
+}
+
+.celebrationStarThree {
+  top: 1.5rem;
+  right: 18%;
+  animation-delay: 0.5s;
+}
+
+@keyframes capybaraBounce {
+  0% {
+    left: 1rem;
+    transform: translateY(2rem) rotate(-5deg);
+  }
+  45% {
+    left: calc(100% - 146px);
+    transform: translateY(-0.5rem) rotate(5deg);
+  }
+  100% {
+    left: 1rem;
+    transform: translateY(2rem) rotate(-5deg);
+  }
+}
+
+@keyframes nameFloat {
+  from { transform: translateY(0); }
+  to { transform: translateY(-0.35rem); }
+}
+
+@keyframes starTwinkle {
+  from { opacity: 0.35; transform: scale(0.7) rotate(-15deg); }
+  to { opacity: 1; transform: scale(1.2) rotate(15deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebrationCapybara,
+  .celebrationName,
+  .celebrationStar {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+}
+
 .shopGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
