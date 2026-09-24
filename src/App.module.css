@@ -828,6 +828,7 @@
 }
 
 .assessmentCard {
+  min-width: 0;
   background-color: var(--color-white);
   padding: 2.5rem;
   border: 1px solid #eadfd8;
@@ -926,6 +927,7 @@
 }
 
 .popcornProgress {
+  width: 100%;
   margin-top: 1.25rem;
 }
 
@@ -939,8 +941,11 @@
 }
 
 .popcornPipe {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
   gap: 0.2rem;
   min-height: 3rem;
   padding: 0.35rem;
@@ -967,6 +972,8 @@
 
 .popcornPiece {
   display: grid;
+  flex: 1 1 0;
+  width: 0;
   min-width: 0;
   min-height: 2rem;
   place-items: center;
