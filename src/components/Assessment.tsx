@@ -11,18 +11,69 @@ interface MathProblem {
 	explanation: string;
 }
 
-const mathProblems: MathProblem[] = [
-	{ id: 1, expression: '7 + 8', answer: 15, category: 'Addisjon', explanation: 'Adder tallene direkte: 7 + 8 = 15.' },
-	{ id: 2, expression: '23 - 9', answer: 14, category: 'Subtraksjon', explanation: 'Trekk 9 fra 23: 23 - 9 = 14.' },
-	{ id: 3, expression: '6 x 7', answer: 42, category: 'Multiplikasjon', explanation: 'Bruk multiplikasjonstabellen: 6 x 7 = 42.' },
-	{ id: 4, expression: '56 / 8', answer: 7, category: 'Divisjon', explanation: 'Hvor mange ganger gaar 8 opp i 56? 56 / 8 = 7.' },
-	{ id: 5, expression: '18 / 3 + 5', answer: 11, category: 'Regnerekkefolge', explanation: 'Gjor divisjon for addisjon: 18 / 3 = 6, og 6 + 5 = 11.' },
-	{ id: 6, expression: '4 + 3 x 6', answer: 22, category: 'Regnerekkefolge', explanation: 'Gjor multiplikasjon for addisjon: 3 x 6 = 18, og 4 + 18 = 22.' },
-	{ id: 7, expression: '1/2 + 1/4', answer: 0.75, category: 'Brokregning', explanation: '1/2 = 2/4, derfor blir 2/4 + 1/4 = 3/4 = 0,75.' },
-	{ id: 8, expression: '3/4 - 1/3', answer: 5 / 12, category: 'Brokregning', explanation: 'Fellesnevneren er 12: 9/12 - 4/12 = 5/12.' },
-	{ id: 9, expression: '(12 - 4) x (2 + 3)', answer: 40, category: 'Parenteser', explanation: 'Regn ut parentesene: 8 x 5 = 40.' },
-	{ id: 10, expression: '30 - 2 x (4 + 3)', answer: 16, category: 'Regnerekkefolge', explanation: '4 + 3 = 7, 2 x 7 = 14, og 30 - 14 = 16.' },
-];
+const randomInteger = (minimum: number, maximum: number) =>
+	Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+
+function createRandomTestProblems(): MathProblem[] {
+	const problems: MathProblem[] = [];
+
+	const addProblem = (expression: string, answer: number, category: string, explanation: string) => {
+		problems.push({ id: problems.length + 1, expression, answer, category, explanation });
+	};
+
+	const addBasicProblem = () => {
+		const type = randomInteger(1, 4);
+		if (type === 1) {
+			const first = randomInteger(5, 50);
+			const second = randomInteger(1, 50);
+			addProblem(`${first} + ${second}`, first + second, 'Addisjon', `Adder tallene direkte: ${first} + ${second} = ${first + second}.`);
+		} else if (type === 2) {
+			const first = randomInteger(20, 80);
+			const second = randomInteger(1, first - 1);
+			addProblem(`${first} - ${second}`, first - second, 'Subtraksjon', `Trekk ${second} fra ${first}: ${first} - ${second} = ${first - second}.`);
+		} else if (type === 3) {
+			const first = randomInteger(2, 12);
+			const second = randomInteger(2, 12);
+			addProblem(`${first} x ${second}`, first * second, 'Multiplikasjon', `Bruk multiplikasjonstabellen: ${first} x ${second} = ${first * second}.`);
+		} else {
+			const divisor = randomInteger(2, 12);
+			const quotient = randomInteger(2, 12);
+			const dividend = divisor * quotient;
+			addProblem(`${dividend} / ${divisor}`, quotient, 'Divisjon', `${dividend} delt på ${divisor} er ${quotient}.`);
+		}
+	};
+
+	const addOrderOfOperationsProblem = () => {
+		const first = randomInteger(2, 10);
+		const second = randomInteger(2, 8);
+		const third = randomInteger(1, 12);
+		const answer = first + second * third;
+		addProblem(`${first} + ${second} x ${third}`, answer, 'Regnerekkefolge', `Gjor multiplikasjon for addisjon: ${second} x ${third} = ${second * third}, og ${first} + ${second * third} = ${answer}.`);
+	};
+
+	const addFractionProblem = () => {
+		const denominator = randomInteger(2, 8);
+		const firstNumerator = randomInteger(1, denominator - 1);
+		const secondNumerator = randomInteger(1, denominator - 1);
+		const answer = (firstNumerator + secondNumerator) / denominator;
+		addProblem(`${firstNumerator}/${denominator} + ${secondNumerator}/${denominator}`, answer, 'Brokregning', `Legg sammen tellerne: ${firstNumerator}/${denominator} + ${secondNumerator}/${denominator} = ${firstNumerator + secondNumerator}/${denominator}.`);
+	};
+
+	const addParenthesesProblem = () => {
+		const first = randomInteger(2, 10);
+		const second = randomInteger(1, 8);
+		const multiplier = randomInteger(2, 6);
+		const answer = (first + second) * multiplier;
+		addProblem(`(${first} + ${second}) x ${multiplier}`, answer, 'Parenteser', `Regn ut parentesen først: ${first} + ${second} = ${first + second}, og ${first + second} x ${multiplier} = ${answer}.`);
+	};
+
+	for (let index = 0; index < 3; index += 1) addBasicProblem();
+	for (let index = 0; index < 3; index += 1) addOrderOfOperationsProblem();
+	for (let index = 0; index < 2; index += 1) addFractionProblem();
+	for (let index = 0; index < 2; index += 1) addParenthesesProblem();
+
+	return problems;
+}
 
 type TestStage = 'start' | 'questions' | 'results';
 type LogoAnimation = 'idle' | 'correct' | 'incorrect';
@@ -58,6 +109,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	const [questionStartedAt, setQuestionStartedAt] = useState(0);
 	const [totalPoints, setTotalPoints] = useState(0);
 	const [logoAnimation, setLogoAnimation] = useState<LogoAnimation>('idle');
+	const [testProblems, setTestProblems] = useState<MathProblem[]>(createRandomTestProblems);
 
 	const animateLogo = (animation: Exclude<LogoAnimation, 'idle'>) => {
 		setLogoAnimation(animation);
@@ -65,6 +117,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	};
 
 	const startTest = () => {
+		setTestProblems(createRandomTestProblems());
 		setCurrentIndex(0);
 		setAnswer('');
 		setResults([]);
@@ -78,7 +131,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 
 	const handleAnswer = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const problem = mathProblems[currentIndex];
+		const problem = testProblems[currentIndex];
 		const parsedAnswer = parseAnswer(answer);
 		const correct = !Number.isNaN(parsedAnswer) && Math.abs(parsedAnswer - problem.answer) < 0.0001;
 		const elapsedSeconds = (Date.now() - questionStartedAt) / 1000;
@@ -98,7 +151,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 			onPointsEarned(points);
 		}
 		setAnswer('');
-		if (currentIndex === mathProblems.length - 1) {
+		if (currentIndex === testProblems.length - 1) {
 			setStage('results');
 		} else {
 			setCurrentIndex(currentIndex + 1);
@@ -114,7 +167,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 					<div className={styles.assessmentIntro}>
 						<span className={styles.assessmentEyebrow}>Kartleggingstest</span>
 						<h1>Grunnleggende regneferdigheter</h1>
-						<p>Testen består av 10 oppgaver med økende vanskelighetsgrad.</p>
+						<p>Testen består av 10 tilfeldig valgte oppgaver med økende vanskelighetsgrad.</p>
 					</div>
 					<div className={styles.assessmentInfo}>
 						<p>Svar med heltall, desimaltall eller brøk, for eksempel <code>2/3</code>.</p>
@@ -127,8 +180,8 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	}
 
 	if (stage === 'questions') {
-		const problem = mathProblems[currentIndex];
-		const progress = ((currentIndex + 1) / mathProblems.length) * 100;
+		const problem = testProblems[currentIndex];
+		const progress = ((currentIndex + 1) / testProblems.length) * 100;
 
 		return (
 			<div className={styles.assessmentWithLogo}>
@@ -139,10 +192,10 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 				/>
 				<section className={styles.assessmentCard}>
 					<div className={styles.assessmentProgressHeader}>
-						<span>Oppgave {currentIndex + 1} av {mathProblems.length}</span>
+						<span>Oppgave {currentIndex + 1} av {testProblems.length}</span>
 						<span>Poeng: {totalPoints} · {problem.category}</span>
 					</div>
-					<div className={styles.assessmentProgressTrack} aria-label={`Progresjon: ${currentIndex + 1} av ${mathProblems.length}`}>
+					<div className={styles.assessmentProgressTrack} aria-label={`Progresjon: ${currentIndex + 1} av ${testProblems.length}`}>
 						<div className={styles.assessmentProgressBar} style={{ width: `${progress}%` }} />
 					</div>
 					<div className={styles.assessmentExpression} aria-live="polite">{problem.expression}</div>
@@ -179,7 +232,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 			<div className={styles.assessmentIntro}>
 				<span className={styles.assessmentEyebrow}>Ferdig</span>
 				<h1>Resultat</h1>
-				<p>Du hadde <strong>{correctCount} av {mathProblems.length}</strong> riktige.</p>
+				<p>Du hadde <strong>{correctCount} av {testProblems.length}</strong> riktige.</p>
 			</div>
 			{incorrectResults.length > 0 ? (
 				<div className={styles.incorrectAnswers}>

@@ -406,22 +406,66 @@
   </div>
 
   <script>
-    const mathProblems = [
-      { id: 1, expr: "7 + 8", targetValue: 15, category: "Addisjon", explanation: "Adder tallene direkte: 7 + 8 = 15." },
-      { id: 2, expr: "23 - 9", targetValue: 14, category: "Subtraksjon", explanation: "Trekk 9 fra 23: 23 - 9 = 14." },
-      { id: 3, expr: "6 * 7", targetValue: 42, category: "Multiplikasjon", explanation: "Bruk multiplikasjonstabellen: 6 x 7 = 42." },
-      { id: 4, expr: "56 / 8", targetValue: 7, category: "Divisjon", explanation: "Hvor mange ganger går 8 opp i 56? 56 / 8 = 7." },
-      { id: 5, expr: "18 / 3 + 5", targetValue: 11, category: "Regnerekkefolge", explanation: "Gjor divisjon for addisjon:\n18 / 3 = 6\n6 + 5 = 11." },
-      { id: 6, expr: "4 + 3 * 6", targetValue: 22, category: "Regnerekkefolge", explanation: "Gjor multiplikasjon for addisjon:\n3 x 6 = 18\n4 + 18 = 22." },
-      { id: 7, expr: "1/2 + 1/4", targetValue: 0.75, category: "Brokregning", explanation: "Finn fellesnevner (4):\n1/2 = 2/4\n2/4 + 1/4 = 3/4 (eller 0,75)." },
-      { id: 8, expr: "3/4 - 1/3", targetValue: 5 / 12, category: "Brokregning", explanation: "Finn fellesnevner (12):\n3/4 = 9/12\n1/3 = 4/12\n9/12 - 4/12 = 5/12." },
-      { id: 9, expr: "(12 - 4) * (2 + 3)", targetValue: 40, category: "Parenteser", explanation: "Regn ut parentesene forst:\n(12 - 4) = 8\n(2 + 3) = 5\n8 x 5 = 40." },
-      { id: 10, expr: "30 - 2 * (4 + 3)", targetValue: 16, category: "Parenteser og regnerekkefolge", explanation: "1. Regn ut parentesen: 4 + 3 = 7\n2. Multipliser: 2 x 7 = 14\n3. Trekk fra: 30 - 14 = 16." }
-    ];
+    const randomInteger = (minimum, maximum) => Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+
+    function createRandomTestProblems() {
+      const problems = [];
+      const addProblem = (expr, targetValue, category, explanation) => {
+        problems.push({ id: problems.length + 1, expr, targetValue, category, explanation });
+      };
+
+      for (let index = 0; index < 3; index += 1) {
+        const type = randomInteger(1, 4);
+        if (type === 1) {
+          const first = randomInteger(5, 50);
+          const second = randomInteger(1, 50);
+          addProblem(`${first} + ${second}`, first + second, "Addisjon", `Adder tallene direkte: ${first} + ${second} = ${first + second}.`);
+        } else if (type === 2) {
+          const first = randomInteger(20, 80);
+          const second = randomInteger(1, first - 1);
+          addProblem(`${first} - ${second}`, first - second, "Subtraksjon", `Trekk ${second} fra ${first}: ${first} - ${second} = ${first - second}.`);
+        } else if (type === 3) {
+          const first = randomInteger(2, 12);
+          const second = randomInteger(2, 12);
+          addProblem(`${first} * ${second}`, first * second, "Multiplikasjon", `Bruk multiplikasjonstabellen: ${first} x ${second} = ${first * second}.`);
+        } else {
+          const divisor = randomInteger(2, 12);
+          const quotient = randomInteger(2, 12);
+          addProblem(`${divisor * quotient} / ${divisor}`, quotient, "Divisjon", `${divisor * quotient} delt på ${divisor} er ${quotient}.`);
+        }
+      }
+
+      for (let index = 0; index < 3; index += 1) {
+        const first = randomInteger(2, 10);
+        const second = randomInteger(2, 8);
+        const third = randomInteger(1, 12);
+        const answer = first + second * third;
+        addProblem(`${first} + ${second} * ${third}`, answer, "Regnerekkefolge", `Gjor multiplikasjon for addisjon: ${second} x ${third} = ${second * third}, og ${first} + ${second * third} = ${answer}.`);
+      }
+
+      for (let index = 0; index < 2; index += 1) {
+        const denominator = randomInteger(2, 8);
+        const firstNumerator = randomInteger(1, denominator - 1);
+        const secondNumerator = randomInteger(1, denominator - 1);
+        const answer = (firstNumerator + secondNumerator) / denominator;
+        addProblem(`${firstNumerator}/${denominator} + ${secondNumerator}/${denominator}`, answer, "Brokregning", `Legg sammen tellerne: ${firstNumerator + secondNumerator}/${denominator}.`);
+      }
+
+      for (let index = 0; index < 2; index += 1) {
+        const first = randomInteger(2, 10);
+        const second = randomInteger(1, 8);
+        const multiplier = randomInteger(2, 6);
+        const answer = (first + second) * multiplier;
+        addProblem(`(${first} + ${second}) * ${multiplier}`, answer, "Parenteser", `Regn ut parentesen først: ${first} + ${second} = ${first + second}, og ${first + second} x ${multiplier} = ${answer}.`);
+      }
+
+      return problems;
+    }
 
     let currentIndex = 0;
     let userAnswers = [];
     let showExplanations = false;
+    let mathProblems = createRandomTestProblems();
     const app = document.getElementById("app");
 
     function parseInput(input) {
@@ -445,7 +489,7 @@
       app.innerHTML = `
         <p class="eyebrow">Kartlegging</p>
         <h1>Grunnleggende regneferdigheter</h1>
-        <p class="intro">Testen består av 10 oppgaver med økende vanskelighetsgrad. Svar i ditt eget tempo og se en oppsummering når du er ferdig.</p>
+        <p class="intro">Testen består av 10 tilfeldig valgte oppgaver med økende vanskelighetsgrad. Svar i ditt eget tempo og se en oppsummering når du er ferdig.</p>
         <div class="instructions">
           <ul>
             <li>Du kan svare med heltall, desimaltall eller brøk, for eksempel <strong>2/3</strong>.</li>
@@ -458,6 +502,7 @@
     }
 
     function startTest() {
+      mathProblems = createRandomTestProblems();
       currentIndex = 0;
       userAnswers = [];
       showExplanations = false;
