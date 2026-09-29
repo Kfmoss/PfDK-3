@@ -1266,6 +1266,49 @@
   border-color: var(--color-card-primary);
 }
 
+.assessmentActions {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 0.65rem;
+}
+
+.assessmentHelpButton {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  border-radius: 12px;
+  padding: 0.85rem 0.5rem;
+  background-color: #e8bd4a;
+  color: #4e3b0b;
+  cursor: pointer;
+  font: inherit;
+  font-weight: bold;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.assessmentHelpButton:hover {
+  background-color: #d6a92f;
+  transform: translateY(-1px);
+}
+
+.assessmentHelpButton:focus-visible {
+  outline: 3px solid rgba(141, 110, 99, 0.45);
+  outline-offset: 2px;
+}
+
+.assessmentHelp {
+  padding: 0.9rem 1rem;
+  border: 1px solid #e8bd4a;
+  border-radius: 10px;
+  background-color: #fff8df;
+  color: #594718;
+  line-height: 1.5;
+}
+
+.assessmentHelp p {
+  margin: 0;
+}
+
 .incorrectAnswers {
   margin: 2rem 0;
 }
@@ -1553,6 +1596,10 @@
   .assessmentExpression {
     padding: 2.5rem 0;
     font-size: 2rem;
+  }
+
+  .assessmentActions {
+    grid-template-columns: 1fr;
   }
 
   .incorrectAnswerHeader {

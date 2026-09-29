@@ -109,6 +109,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	const [stage, setStage] = useState<TestStage>('start');
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [answer, setAnswer] = useState('');
+	const [showTaskHelp, setShowTaskHelp] = useState(false);
 	const [results, setResults] = useState<AnswerResult[]>([]);
 	const [showExplanations, setShowExplanations] = useState(false);
 	const [questionStartedAt, setQuestionStartedAt] = useState(0);
@@ -159,6 +160,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		setTestProblems(createRandomTestProblems());
 		setCurrentIndex(0);
 		setAnswer('');
+		setShowTaskHelp(false);
 		setResults([]);
 		setShowExplanations(false);
 		setTotalPoints(0);
@@ -192,6 +194,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 			onPointsEarned(points);
 		}
 		setAnswer('');
+		setShowTaskHelp(false);
 		if (currentIndex === testProblems.length - 1) {
 			setStage('results');
 			setShowCompletionCelebration(true);
@@ -298,7 +301,23 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 							required
 							autoComplete="off"
 						/>
-						<button type="submit" className={styles.assessmentPrimaryButton}>Neste oppgave</button>
+						<div className={styles.assessmentActions}>
+							<button type="submit" className={styles.assessmentPrimaryButton}>Neste oppgave</button>
+							<button
+								type="button"
+								className={styles.assessmentHelpButton}
+								aria-expanded={showTaskHelp}
+								aria-controls="assessmentTaskHelp"
+								onClick={() => setShowTaskHelp((visible) => !visible)}
+							>
+								Hjelp meg
+							</button>
+						</div>
+						{showTaskHelp && (
+							<div className={styles.assessmentHelp} id="assessmentTaskHelp" role="status">
+								<p>{problem.explanation}</p>
+							</div>
+						)}
 					</form>
 				</section>
 			</div>
