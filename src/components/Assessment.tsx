@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { FormEvent } from 'react';
 import styles from '../App.module.css';
 import logo from '../assets/mat_capybara_logo.png';
+import { CelebrationOverlay } from './CelebrationOverlay.tsx';
 
 interface MathProblem {
 	id: number;
@@ -76,7 +77,7 @@ function createRandomTestProblems(): MathProblem[] {
 }
 
 type TestStage = 'start' | 'questions' | 'results';
-type LogoAnimation = 'idle' | 'correct' | 'incorrect';
+type AnswerAnimation = 'idle' | 'correct' | 'incorrect';
 
 interface AnswerResult {
 	problem: MathProblem;
@@ -108,12 +109,13 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	const [showExplanations, setShowExplanations] = useState(false);
 	const [questionStartedAt, setQuestionStartedAt] = useState(0);
 	const [totalPoints, setTotalPoints] = useState(0);
-	const [logoAnimation, setLogoAnimation] = useState<LogoAnimation>('idle');
+	const [answerAnimation, setAnswerAnimation] = useState<AnswerAnimation>('idle');
+	const [showCompletionCelebration, setShowCompletionCelebration] = useState(false);
 	const [testProblems, setTestProblems] = useState<MathProblem[]>(createRandomTestProblems);
 
-	const animateLogo = (animation: Exclude<LogoAnimation, 'idle'>) => {
-		setLogoAnimation(animation);
-		window.setTimeout(() => setLogoAnimation('idle'), animation === 'correct' ? 650 : 2800);
+	const animateAnswer = (animation: Exclude<AnswerAnimation, 'idle'>) => {
+		setAnswerAnimation(animation);
+		window.setTimeout(() => setAnswerAnimation('idle'), animation === 'correct' ? 1500 : 2800);
 	};
 
 	const startTest = () => {
@@ -123,7 +125,8 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		setResults([]);
 		setShowExplanations(false);
 		setTotalPoints(0);
-		setLogoAnimation('idle');
+		setAnswerAnimation('idle');
+		setShowCompletionCelebration(false);
 		setQuestionStartedAt(Date.now());
 		onTestStart();
 		setStage('questions');
@@ -145,7 +148,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		const nextResults = [...results, result];
 
 		setResults(nextResults);
-		animateLogo(correct ? 'correct' : 'incorrect');
+		animateAnswer(correct ? 'correct' : 'incorrect');
 		if (points > 0) {
 			setTotalPoints((currentPoints) => currentPoints + points);
 			onPointsEarned(points);
@@ -153,6 +156,8 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		setAnswer('');
 		if (currentIndex === testProblems.length - 1) {
 			setStage('results');
+			setShowCompletionCelebration(true);
+			window.setTimeout(() => setShowCompletionCelebration(false), 4200);
 		} else {
 			setCurrentIndex(currentIndex + 1);
 			setQuestionStartedAt(Date.now());
@@ -185,11 +190,14 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 
 		return (
 			<div className={styles.assessmentWithLogo}>
-				<img
-					src={logo}
-					alt="Mat-Capybara"
-					className={`${styles.assessmentLogo} ${styles[`assessmentLogo${logoAnimation.charAt(0).toUpperCase()}${logoAnimation.slice(1)}`]}`}
-				/>
+				<div className={styles.assessmentMascot}>
+					<img
+						src={logo}
+						alt="Mat-Capybara"
+						className={`${styles.assessmentLogo} ${answerAnimation === 'incorrect' ? styles.assessmentLogoIncorrect : ''}`}
+					/>
+					{answerAnimation === 'correct' && <CelebrationOverlay />}
+				</div>
 				<section className={styles.assessmentCard}>
 					<div className={styles.assessmentTaskTitle}>
 						<span className={styles.assessmentEyebrow}>Kartleggingstest</span>
@@ -232,6 +240,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 			: 'Du kan prøve nivå 3, den svarte og mest krevende løypa.';
 
 	return (
+		<>
 		<section className={styles.assessmentCard}>
 			<div className={styles.assessmentIntro}>
 				<span className={styles.assessmentEyebrow}>Ferdig</span>
@@ -266,5 +275,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 			</div>
 			<button type="button" className={styles.assessmentPrimaryButton} onClick={startTest}>Ta testen på nytt</button>
 		</section>
+		{showCompletionCelebration && <CelebrationOverlay fullScreen />}
+		</>
 	);
 };

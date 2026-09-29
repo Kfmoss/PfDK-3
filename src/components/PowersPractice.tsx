@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { FormEvent } from 'react';
 import styles from '../App.module.css';
+import { CelebrationOverlay } from './CelebrationOverlay';
 
 interface AlgebraTask {
   id: number;
@@ -92,10 +93,12 @@ export const PowersPractice: React.FC<PowersPracticeProps> = ({ onPointsEarned }
   const [totalPoints, setTotalPoints] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [questionStartedAt, setQuestionStartedAt] = useState(0);
+  const [showCompletionCelebration, setShowCompletionCelebration] = useState(false);
 
   const startPractice = (level: AlgebraLevel) => {
     setSelectedLevel(level);
     setStarted(true);
+    setShowCompletionCelebration(false);
     setCurrentIndex(0);
     setAnswer('');
     setFeedback(null);
@@ -133,6 +136,8 @@ export const PowersPractice: React.FC<PowersPracticeProps> = ({ onPointsEarned }
 
     if (currentIndex === selectedLevel.tasks.length - 1) {
       setStarted(false);
+      setShowCompletionCelebration(true);
+      window.setTimeout(() => setShowCompletionCelebration(false), 4200);
       return;
     }
 
@@ -179,6 +184,7 @@ export const PowersPractice: React.FC<PowersPracticeProps> = ({ onPointsEarned }
 
   if (!started || !selectedLevel) {
     return (
+      <>
       <div className={styles.powersPage}>
         <div className={styles.powersIntro}>
           <span className={styles.assessmentEyebrow}>Tall og algebra</span>
@@ -201,6 +207,8 @@ export const PowersPractice: React.FC<PowersPracticeProps> = ({ onPointsEarned }
           ))}
         </div>
       </div>
+      {showCompletionCelebration && <CelebrationOverlay fullScreen />}
+      </>
     );
   }
 

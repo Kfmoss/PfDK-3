@@ -7,6 +7,7 @@ import gameBoard from '../assets/Oppgave_2_uke37.jpg';
 import { Zap, Play, ChevronRight, Wand2 } from 'lucide-react';
 import { Assessment } from './Assessment';
 import { PowersPractice } from './PowersPractice';
+import { CelebrationOverlay } from './CelebrationOverlay';
 import fig1 from '../assets/fig1.png';
 import fig2 from '../assets/fig2.png';
 import fig3 from '../assets/fig3.png';
@@ -72,6 +73,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
   const [gameAnswer, setGameAnswer] = useState('');
   const [gameStartedAt, setGameStartedAt] = useState(0);
   const [gameCompleted, setGameCompleted] = useState(false);
+  const [showGameCelebration, setShowGameCelebration] = useState(false);
   const [gameFeedback, setGameFeedback] = useState<'idle' | 'wrong' | 'correct'>('idle');
 
   const startAssessment = () => {
@@ -101,6 +103,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
     setGameAnswer('');
     setGameStartedAt(Date.now());
     setGameCompleted(false);
+    setShowGameCelebration(false);
     setGameFeedback('idle');
     setGameStarted(true);
   };
@@ -121,6 +124,8 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
     const points = Math.max(10, Math.round(100 - elapsedSeconds * 3));
     setUser((currentUser) => ({ ...currentUser, points: currentUser.points + points }));
     setGameCompleted(true);
+    setShowGameCelebration(true);
+    window.setTimeout(() => setShowGameCelebration(false), 4200);
     setGameFeedback('correct');
   };
 
@@ -141,6 +146,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
     }
 
     return (
+      <>
       <div className={styles.mathGamePage}>
         <div className={styles.mathGameIntro}>
           <span className={styles.assessmentEyebrow}>Matalek / Spill</span>
@@ -172,6 +178,8 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
         {gameFeedback === 'correct' && <p className={styles.mathGameSuccess}>Riktig svar! Du fikk poeng basert på svartiden.</p>}
         {gameCompleted && <button type="button" className={styles.assessmentSecondaryButton} onClick={startMathGame}>Spill på nytt</button>}
       </div>
+      {showGameCelebration && <CelebrationOverlay fullScreen />}
+      </>
     );
   };
 
