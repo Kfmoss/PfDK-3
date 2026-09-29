@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import styles from '../App.module.css';
 import logo from '../assets/mat_capybara_logo.png';
@@ -78,6 +78,7 @@ function createRandomTestProblems(): MathProblem[] {
 
 type TestStage = 'start' | 'questions' | 'results';
 type AnswerAnimation = 'idle' | 'correct' | 'incorrect';
+const TEST_DURATION_SECONDS = 10 * 60;
 
 interface AnswerResult {
 	problem: MathProblem;
@@ -108,10 +109,43 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	const [results, setResults] = useState<AnswerResult[]>([]);
 	const [showExplanations, setShowExplanations] = useState(false);
 	const [questionStartedAt, setQuestionStartedAt] = useState(0);
+	const [timeRemaining, setTimeRemaining] = useState(TEST_DURATION_SECONDS);
 	const [totalPoints, setTotalPoints] = useState(0);
 	const [answerAnimation, setAnswerAnimation] = useState<AnswerAnimation>('idle');
 	const [showCompletionCelebration, setShowCompletionCelebration] = useState(false);
 	const [testProblems, setTestProblems] = useState<MathProblem[]>(createRandomTestProblems);
+	const minutesRemaining = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+	const secondsRemaining = (timeRemaining % 60).toString().padStart(2, '0');
+
+	useEffect(() => {
+		if (stage !== 'questions') {
+			return;
+		}
+
+		const timerId = window.setInterval(() => {
+			setTimeRemaining((remaining) => Math.max(0, remaining - 1));
+		}, 1000);
+
+		return () => window.clearInterval(timerId);
+	}, [stage]);
+
+	useEffect(() => {
+		if (stage !== 'questions' || timeRemaining !== 0) {
+			return;
+		}
+
+		setStage('results');
+		setShowCompletionCelebration(true);
+	}, [stage, timeRemaining]);
+
+	useEffect(() => {
+		if (!showCompletionCelebration) {
+			return;
+		}
+
+		const celebrationTimeout = window.setTimeout(() => setShowCompletionCelebration(false), 4200);
+		return () => window.clearTimeout(celebrationTimeout);
+	}, [showCompletionCelebration]);
 
 	const animateAnswer = (animation: Exclude<AnswerAnimation, 'idle'>) => {
 		setAnswerAnimation(animation);
@@ -127,6 +161,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		setTotalPoints(0);
 		setAnswerAnimation('idle');
 		setShowCompletionCelebration(false);
+		setTimeRemaining(TEST_DURATION_SECONDS);
 		setQuestionStartedAt(Date.now());
 		onTestStart();
 		setStage('questions');
@@ -157,7 +192,6 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		if (currentIndex === testProblems.length - 1) {
 			setStage('results');
 			setShowCompletionCelebration(true);
-			window.setTimeout(() => setShowCompletionCelebration(false), 4200);
 		} else {
 			setCurrentIndex(currentIndex + 1);
 			setQuestionStartedAt(Date.now());
@@ -176,7 +210,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 					</div>
 					<div className={styles.assessmentInfo}>
 						<p>Svar med heltall, desimaltall eller brøk, for eksempel <code>2/3</code>.</p>
-						<p>Du får ingen tilbakemelding underveis og kan bruke så lang tid du vil.</p>
+						<p>Du har 10 minutter på testen og får ingen tilbakemelding underveis.</p>
 					</div>
 					<button type="button" className={styles.assessmentPrimaryButton} onClick={startTest}>Start testen</button>
 				</section>
@@ -202,6 +236,14 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 					<div className={styles.assessmentTaskTitle}>
 						<span className={styles.assessmentEyebrow}>Kartleggingstest</span>
 						<h1>Grunnleggende regneferdigheter</h1>
+					</div>
+					<div
+						className={`${styles.assessmentTimer} ${timeRemaining <= 60 ? styles.assessmentTimerWarning : ''}`}
+						role="timer"
+						aria-label={`Tid igjen ${minutesRemaining}:${secondsRemaining}`}
+					>
+						<span>Tid igjen</span>
+						<strong>{minutesRemaining}:{secondsRemaining}</strong>
 					</div>
 					<div className={styles.assessmentProgressHeader}>
 						<span>Oppgave {currentIndex + 1} av {testProblems.length}</span>
