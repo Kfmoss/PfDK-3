@@ -191,6 +191,10 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 					className={`${styles.assessmentLogo} ${styles[`assessmentLogo${logoAnimation.charAt(0).toUpperCase()}${logoAnimation.slice(1)}`]}`}
 				/>
 				<section className={styles.assessmentCard}>
+					<div className={styles.assessmentTaskTitle}>
+						<span className={styles.assessmentEyebrow}>Kartleggingstest</span>
+						<h1>Grunnleggende regneferdigheter</h1>
+					</div>
 					<div className={styles.assessmentProgressHeader}>
 						<span>Oppgave {currentIndex + 1} av {testProblems.length}</span>
 						<span>Poeng: {totalPoints} · {problem.category}</span>
