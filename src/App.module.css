@@ -1163,6 +1163,40 @@
   transition: width 0.3s ease;
 }
 
+.assessmentAnswerFeedback {
+  margin-top: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  line-height: 1.4;
+  animation: assessmentFeedbackIn 0.3s ease-out both;
+}
+
+.assessmentAnswerFeedbackFast {
+  border-color: #e8bd4a;
+  background-color: #fff8df;
+  color: #594718;
+}
+
+.assessmentAnswerFeedbackCorrect {
+  border-color: #c5e6c6;
+  background-color: #edf8ed;
+  color: #386b3b;
+}
+
+.assessmentAnswerFeedbackIncorrect {
+  border-color: #f0c8bd;
+  background-color: #fff0ed;
+  color: #9b493c;
+}
+
+@keyframes assessmentFeedbackIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .popcornProgress {
   width: 100%;
   margin-top: 1.25rem;

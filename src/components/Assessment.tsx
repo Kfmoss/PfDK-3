@@ -81,6 +81,7 @@ function createRandomTestProblems(): MathProblem[] {
 
 type TestStage = 'start' | 'questions' | 'results';
 type AnswerAnimation = 'idle' | 'correct' | 'incorrect';
+type AnswerFeedback = { kind: 'fast' | 'correct' | 'incorrect'; message: string };
 const TEST_DURATION_SECONDS = 10 * 60;
 
 interface AnswerResult {
@@ -152,6 +153,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [answer, setAnswer] = useState('');
 	const [showTaskHelp, setShowTaskHelp] = useState(false);
+	const [answerFeedback, setAnswerFeedback] = useState<AnswerFeedback | null>(null);
 	const [results, setResults] = useState<AnswerResult[]>([]);
 	const [questionStartedAt, setQuestionStartedAt] = useState(0);
 	const [timeRemaining, setTimeRemaining] = useState(TEST_DURATION_SECONDS);
@@ -192,6 +194,15 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		return () => window.clearTimeout(celebrationTimeout);
 	}, [showCompletionCelebration]);
 
+	useEffect(() => {
+		if (!answerFeedback) {
+			return;
+		}
+
+		const feedbackTimeout = window.setTimeout(() => setAnswerFeedback(null), 2200);
+		return () => window.clearTimeout(feedbackTimeout);
+	}, [answerFeedback]);
+
 	const animateAnswer = (animation: Exclude<AnswerAnimation, 'idle'>) => {
 		setAnswerAnimation(animation);
 		window.setTimeout(() => setAnswerAnimation('idle'), animation === 'correct' ? 1500 : 2800);
@@ -202,6 +213,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		setCurrentIndex(0);
 		setAnswer('');
 		setShowTaskHelp(false);
+		setAnswerFeedback(null);
 		setResults([]);
 		setTotalPoints(0);
 		setAnswerAnimation('idle');
@@ -219,6 +231,15 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		const correct = !Number.isNaN(parsedAnswer) && Math.abs(parsedAnswer - problem.answer) < 0.0001;
 		const elapsedSeconds = (Date.now() - questionStartedAt) / 1000;
 		const points = correct ? Math.max(10, Math.round(100 - elapsedSeconds * 3)) : 0;
+		const wasFast = correct && elapsedSeconds <= 5;
+		setAnswerFeedback({
+			kind: correct ? (wasFast ? 'fast' : 'correct') : 'incorrect',
+			message: wasFast
+				? `Raskt og riktig! Du svarte på ${elapsedSeconds.toFixed(1).replace('.', ',')} sekunder og fikk ${points} poeng.`
+				: correct
+					? `Riktig svar! Du fikk ${points} poeng.`
+					: 'Ikke helt riktig. Du kan se forklaringen etter testen.',
+		});
 		const result: AnswerResult = {
 			problem,
 			answer,
@@ -328,6 +349,11 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 					<div className={styles.assessmentProgressTrack} aria-label={`Progresjon: ${currentIndex + 1} av ${testProblems.length}`}>
 						<div className={styles.assessmentProgressBar} style={{ width: `${progress}%` }} />
 					</div>
+					{answerFeedback && (
+						<div className={`${styles.assessmentAnswerFeedback} ${styles[`assessmentAnswerFeedback${answerFeedback.kind.charAt(0).toUpperCase()}${answerFeedback.kind.slice(1)}`]}`} role="status">
+							{answerFeedback.message}
+						</div>
+					)}
 					<div className={styles.assessmentExpression} aria-live="polite">{problem.expression}</div>
 					<form className={styles.assessmentForm} onSubmit={handleAnswer}>
 						<label htmlFor="answerInput">Skriv svaret ditt</label>
@@ -381,6 +407,11 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 				<h1>Resultat</h1>
 				<p>Du hadde <strong>{correctCount} av {testProblems.length}</strong> riktige.</p>
 			</div>
+			{answerFeedback?.kind === 'fast' && (
+				<div className={`${styles.assessmentAnswerFeedback} ${styles.assessmentAnswerFeedbackFast}`} role="status">
+					{answerFeedback.message}
+				</div>
+			)}
 			{incorrectResults.length > 0 ? (
 				<div className={styles.incorrectAnswers}>
 					<h2>Oppgaver du kan øve mer på</h2>
