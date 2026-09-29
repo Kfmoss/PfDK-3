@@ -105,6 +105,27 @@ function parseAnswer(value: string): number {
 	return Number.parseFloat(cleanValue);
 }
 
+function getTaskHelp(category: string): string {
+	switch (category) {
+		case 'Addisjon':
+			return 'Eksempel: Ved 8 + 3 kan du starte på 8 og telle tre steg videre. Bruk samme metode med tallene i oppgaven.';
+		case 'Subtraksjon':
+			return 'Eksempel: Ved 12 - 4 kan du telle fire steg bakover fra 12. Gjør tilsvarende med tallene i oppgaven.';
+		case 'Multiplikasjon':
+			return 'Eksempel: 3 x 4 betyr tre grupper med fire. Bruk gangetabellen eller tell gruppene.';
+		case 'Divisjon':
+			return 'Eksempel: 12 / 3 spør hvor mange grupper på tre som får plass i tolv. Tell gruppene, og bruk samme idé i oppgaven.';
+		case 'Regnerekkefolge':
+			return 'Eksempel: I 2 + 3 x 4 regner du multiplikasjonen før addisjonen. Se etter hvilken regneoperasjon som skal gjøres først.';
+		case 'Brokregning':
+			return 'Eksempel: Når brøker har samme nevner, legger du sammen tellerne og beholder nevneren.';
+		case 'Parenteser':
+			return 'Eksempel: I 3 x (2 + 4) regner du inni parentesen først. Deretter bruker du tallet utenfor parentesen.';
+		default:
+			return 'Les oppgaven nøye, finn ut hvilken regneoperasjon den spør etter, og bruk framgangsmåten fra eksempelet som passer best.';
+	}
+}
+
 export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEarned, onNavigateToAlgebra }) => {
 	const [stage, setStage] = useState<TestStage>('start');
 	const [currentIndex, setCurrentIndex] = useState(0);
@@ -315,7 +336,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 						</div>
 						{showTaskHelp && (
 							<div className={styles.assessmentHelp} id="assessmentTaskHelp" role="status">
-								<p>{problem.explanation}</p>
+								<p>{getTaskHelp(problem.category)}</p>
 							</div>
 						)}
 					</form>
