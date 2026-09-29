@@ -126,13 +126,33 @@ function getTaskHelp(category: string): string {
 	}
 }
 
+function getSubjectMatter(category: string): string {
+	switch (category) {
+		case 'Addisjon':
+			return 'Addisjon finner summen av tall. Del gjerne opp et tall i enklere deler for å regne i hodet.';
+		case 'Subtraksjon':
+			return 'Subtraksjon finner forskjellen mellom tall. Du kan trekke fra i flere oversiktlige steg.';
+		case 'Multiplikasjon':
+			return 'Multiplikasjon er like grupper lagt sammen. Faktorenes rekkefølge endrer ikke produktet.';
+		case 'Divisjon':
+			return 'Divisjon fordeler et tall i like store grupper. Multiplikasjon kan brukes til å kontrollere svaret.';
+		case 'Regnerekkefolge':
+			return 'Regn parenteser først, deretter potenser, multiplikasjon og divisjon, og til slutt addisjon og subtraksjon.';
+		case 'Brokregning':
+			return 'Når brøker har samme nevner, beholder du nevneren og regner med tellerne.';
+		case 'Parenteser':
+			return 'Regn ut innholdet i parentesen før du bruker regneoperasjonen utenfor.';
+		default:
+			return 'Velg regneoperasjonen som passer, og utfør regningen trinn for trinn.';
+	}
+}
+
 export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEarned, onNavigateToAlgebra }) => {
 	const [stage, setStage] = useState<TestStage>('start');
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [answer, setAnswer] = useState('');
 	const [showTaskHelp, setShowTaskHelp] = useState(false);
 	const [results, setResults] = useState<AnswerResult[]>([]);
-	const [showExplanations, setShowExplanations] = useState(false);
 	const [questionStartedAt, setQuestionStartedAt] = useState(0);
 	const [timeRemaining, setTimeRemaining] = useState(TEST_DURATION_SECONDS);
 	const [totalPoints, setTotalPoints] = useState(0);
@@ -183,7 +203,6 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 		setAnswer('');
 		setShowTaskHelp(false);
 		setResults([]);
-		setShowExplanations(false);
 		setTotalPoints(0);
 		setAnswerAnimation('idle');
 		setShowCompletionCelebration(false);
@@ -371,11 +390,20 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 								<strong>Oppgave {result.problem.id}: {result.problem.expression}</strong>
 								<span>Ditt svar: {result.answer || '(tomt)'}</span>
 							</div>
-							<p>Riktig svar: <strong>{result.problem.answer}</strong></p>
-							{showExplanations && <p className={styles.explanation}><strong>Forklaring:</strong> {result.problem.explanation}</p>}
+							<div className={styles.explanationContent}>
+								<div className={styles.explanationText}>
+									<p><strong>Fagstoff: {result.problem.category}</strong></p>
+									<p>{getSubjectMatter(result.problem.category)}</p>
+									<p className={styles.explanation}><strong>Steg for steg:</strong> {result.problem.explanation}</p>
+								</div>
+								<div className={styles.explanationAnimation} aria-hidden="true">
+									<span>{result.problem.expression}</span>
+									<span className={styles.explanationArrow}>→</span>
+									<strong>{result.problem.answer}</strong>
+								</div>
+							</div>
 						</article>
 					))}
-					{!showExplanations && <button type="button" className={styles.assessmentSecondaryButton} onClick={() => setShowExplanations(true)}>Vis trinnvise forklaringer</button>}
 				</div>
 			) : (
 				<p className={styles.assessmentSuccess}>Fantastisk jobbet! Du svarte riktig på alle oppgavene.</p>

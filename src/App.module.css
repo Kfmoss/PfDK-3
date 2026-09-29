@@ -1331,6 +1331,20 @@
   margin-top: 0.45rem;
 }
 
+.explanationContent {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 0.55fr);
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid #eadfd8;
+}
+
+.explanationText > p:first-child {
+  color: var(--color-active);
+}
+
 .incorrectAnswerHeader {
   display: flex;
   justify-content: space-between;
@@ -1338,9 +1352,54 @@
 }
 
 .explanation {
-  padding-top: 0.6rem;
-  border-top: 1px solid #eadfd8;
+	padding-top: 0.35rem;
   color: #765e52;
+}
+
+.explanationAnimation {
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #d9e9db;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f2faf1, #fff8df);
+  font-family: Consolas, monospace;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.explanationAnimation > span:first-child {
+  animation: explanationStepIn 0.55s ease-out both;
+}
+
+.explanationArrow {
+  color: #a18832;
+  animation: explanationArrowIn 0.45s ease-out 0.3s both;
+}
+
+.explanationAnimation > strong {
+  color: #386b3b;
+  animation: explanationAnswerIn 0.55s ease-out 0.65s both;
+}
+
+@keyframes explanationStepIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes explanationArrowIn {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes explanationAnswerIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .assessmentSuccess {
@@ -1605,6 +1664,14 @@
   .incorrectAnswerHeader {
     flex-direction: column;
     gap: 0.35rem;
+  }
+
+  .explanationContent {
+    grid-template-columns: 1fr;
+  }
+
+  .explanationAnimation {
+    min-height: 64px;
   }
 
   .hero h1 {
