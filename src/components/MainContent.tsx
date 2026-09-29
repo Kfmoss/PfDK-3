@@ -229,7 +229,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
           <div className={styles.welcomePage}>
             <div className={styles.hero}>
               <img src={logo} alt="Mat-Capybara Logo" className={styles.mainLogo} />
-              <h1>Velkommen til mat-capybara!</h1>
+              <h1>Velkommen til matte-capybara!</h1>
               <p>Din interaktive guide gjennom VG1 1P-matematikk.</p>
             </div>
 
