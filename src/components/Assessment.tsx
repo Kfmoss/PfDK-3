@@ -199,7 +199,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 			return;
 		}
 
-		const feedbackTimeout = window.setTimeout(() => setAnswerFeedback(null), 2200);
+		const feedbackTimeout = window.setTimeout(() => setAnswerFeedback(null), 2600);
 		return () => window.clearTimeout(feedbackTimeout);
 	}, [answerFeedback]);
 
@@ -350,7 +350,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 						<div className={styles.assessmentProgressBar} style={{ width: `${progress}%` }} />
 					</div>
 					{answerFeedback && (
-						<div className={`${styles.assessmentAnswerFeedback} ${styles[`assessmentAnswerFeedback${answerFeedback.kind.charAt(0).toUpperCase()}${answerFeedback.kind.slice(1)}`]}`} role="status">
+						<div className={`${styles.assessmentAnswerFeedback} ${styles[`assessmentAnswerFeedback${answerFeedback.kind.charAt(0).toUpperCase()}${answerFeedback.kind.slice(1)}`]}`} role="status" aria-atomic="true">
 							{answerFeedback.message}
 						</div>
 					)}
@@ -408,7 +408,7 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 				<p>Du hadde <strong>{correctCount} av {testProblems.length}</strong> riktige.</p>
 			</div>
 			{answerFeedback?.kind === 'fast' && (
-				<div className={`${styles.assessmentAnswerFeedback} ${styles.assessmentAnswerFeedbackFast}`} role="status">
+				<div className={`${styles.assessmentAnswerFeedback} ${styles.assessmentAnswerFeedbackFast}`} role="status" aria-atomic="true">
 					{answerFeedback.message}
 				</div>
 			)}

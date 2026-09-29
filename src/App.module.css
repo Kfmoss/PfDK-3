@@ -1164,14 +1164,24 @@
 }
 
 .assessmentAnswerFeedback {
-  margin-top: 0.75rem;
-  padding: 0.7rem 0.85rem;
+  position: fixed;
+  z-index: 10001;
+  top: calc(env(safe-area-inset-top, 0px) + 1rem);
+  left: 50%;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  margin: 0;
+  padding: 0.9rem 1.2rem;
   border: 1px solid transparent;
-  border-radius: 9px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(50, 40, 20, 0.2);
   font-size: 0.9rem;
   font-weight: bold;
   line-height: 1.4;
-  animation: assessmentFeedbackIn 0.3s ease-out both;
+  text-align: center;
+  pointer-events: none;
+  transform: translateX(-50%);
+  animation: assessmentFeedbackIn 2.6s ease-out both;
 }
 
 .assessmentAnswerFeedbackFast {
@@ -1193,8 +1203,8 @@
 }
 
 @keyframes assessmentFeedbackIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+  0%, 100% { opacity: 0; transform: translate(-50%, -12px) scale(0.97); }
+  10%, 84% { opacity: 1; transform: translate(-50%, 0) scale(1); }
 }
 
 .popcornProgress {
