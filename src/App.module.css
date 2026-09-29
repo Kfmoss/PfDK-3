@@ -1041,6 +1041,7 @@
 }
 
 .assessmentCard {
+  position: relative;
   min-width: 0;
   background-color: var(--color-white);
   padding: 2.5rem;
@@ -1164,9 +1165,9 @@
 }
 
 .assessmentAnswerFeedback {
-  position: fixed;
-  z-index: 10001;
-  top: calc(env(safe-area-inset-top, 0px) + 1rem);
+  position: absolute;
+  z-index: 20;
+  top: 50%;
   left: 50%;
   width: max-content;
   max-width: calc(100vw - 2rem);
