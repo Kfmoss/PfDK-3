@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import styles from '../App.module.css';
 import logo from '../assets/mat_capybara_logo.png';
+import popcorn1 from '../assets/popcorn1.png';
+import popcorn2 from '../assets/popcorn2.png';
+import popcorn3 from '../assets/popcorn3.png';
 import { CelebrationOverlay } from './CelebrationOverlay.tsx';
 
 interface MathProblem {
@@ -221,18 +224,48 @@ export const Assessment: React.FC<AssessmentProps> = ({ onTestStart, onPointsEar
 	if (stage === 'questions') {
 		const problem = testProblems[currentIndex];
 		const progress = ((currentIndex + 1) / testProblems.length) * 100;
+		const popcornImages = [popcorn1, popcorn2, popcorn3];
+		const popcornPiecesPerAnswer = 6;
 
 		return (
-			<div className={styles.assessmentWithLogo}>
-				<div className={styles.assessmentMascot}>
-					<img
-						src={logo}
-						alt="Mat-Capybara"
-						className={`${styles.assessmentLogo} ${answerAnimation === 'incorrect' ? styles.assessmentLogoIncorrect : ''}`}
-					/>
-					{answerAnimation === 'correct' && <CelebrationOverlay />}
+			<div className={styles.assessmentTestLayout}>
+				<div className={styles.assessmentTestSidebar}>
+					<div className={styles.assessmentMascot}>
+						<img
+							src={logo}
+							alt="Mat-Capybara"
+							className={`${styles.assessmentLogo} ${answerAnimation === 'incorrect' ? styles.assessmentLogoIncorrect : ''}`}
+						/>
+						{answerAnimation === 'correct' && <CelebrationOverlay />}
+					</div>
+					<div
+						className={styles.assessmentJar}
+						role="progressbar"
+						aria-label={`Popcornkrukke: ${results.length} av ${testProblems.length} oppgaver besvart`}
+						aria-valuemin={0}
+						aria-valuemax={testProblems.length}
+						aria-valuenow={results.length}
+					>
+						<div className={styles.assessmentJarInterior}>
+							<div
+								className={`${styles.assessmentJarFill} ${results.length > 0 ? styles.assessmentJarFillActive : ''}`}
+								style={{ height: `${(results.length / testProblems.length) * 100}%` }}
+							>
+								{results.flatMap((result, answerIndex) =>
+									Array.from({ length: popcornPiecesPerAnswer }, (_, pieceIndex) => (
+									<img
+											src={popcornImages[(answerIndex * popcornPiecesPerAnswer + pieceIndex) % popcornImages.length]}
+										alt=""
+										className={styles.assessmentJarPopcorn}
+										key={`${result.problem.id}-${pieceIndex}`}
+									/>
+									)),
+								)}
+							</div>
+						</div>
+					</div>
 				</div>
-				<section className={styles.assessmentCard}>
+				<section className={`${styles.assessmentCard} ${styles.assessmentTestCard}`}>
 					<div className={styles.assessmentTaskTitle}>
 						<span className={styles.assessmentEyebrow}>Kartleggingstest</span>
 						<h1>Grunnleggende regneferdigheter</h1>
