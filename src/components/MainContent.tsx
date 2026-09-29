@@ -27,7 +27,7 @@ import fig15 from '../assets/fig15.png';
 interface UserStatus {
   points: number;
   level: number;
-  unlockedOutfit: string;
+  equippedOutfit: string;
 }
 
 interface MainContentProps {
@@ -64,7 +64,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
   const [user, setUser] = useState<UserStatus>({
     points: 0,
     level: 1,
-    unlockedOutfit: 'Klassisk Genser',
+    equippedOutfit: 'Klassisk Genser',
   });
   const [ownedItems, setOwnedItems] = useState<string[]>([]);
   const [activeOutfit, setActiveOutfit] = useState<ShopItem | null>(null);
@@ -92,11 +92,20 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
     setUser((currentUser) => ({
       ...currentUser,
       points: currentUser.points - item.price,
-      unlockedOutfit: item.name,
+      equippedOutfit: item.name,
     }));
     setActiveOutfit(item);
     setPurchaseCelebration(item);
     setOwnedItems((currentItems) => [...currentItems, item.id]);
+  };
+
+  const equipItem = (item: ShopItem) => {
+    if (!ownedItems.includes(item.id)) {
+      return;
+    }
+
+    setActiveOutfit(item);
+    setUser((currentUser) => ({ ...currentUser, equippedOutfit: item.name }));
   };
 
   const startMathGame = () => {
@@ -204,6 +213,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
       <div className={styles.shopGrid}>
         {shopItems.map((item) => {
           const isOwned = ownedItems.includes(item.id);
+          const isActive = activeOutfit?.id === item.id;
           const canBuy = user.points >= item.price;
 
           return (
@@ -217,10 +227,10 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
                 <button
                   type="button"
                   className={styles.shopBuyButton}
-                  onClick={() => buyItem(item)}
-                  disabled={isOwned || !canBuy}
+                  onClick={() => (isOwned ? equipItem(item) : buyItem(item))}
+                  disabled={isActive || (!isOwned && !canBuy)}
                 >
-                  {isOwned ? 'Kjøpt' : canBuy ? 'Kjøp figur' : 'Ikke nok poeng'}
+                  {isActive ? 'Brukes' : isOwned ? 'Bruk antrekk' : canBuy ? 'Kjøp figur' : 'Ikke nok poeng'}
                 </button>
               </div>
             </article>
@@ -308,7 +318,7 @@ export const MainContent: React.FC<MainContentProps> = ({ activeView, onSetView 
             <span className={styles.label}>Antrekk:</span>
             <span className={styles.outfitValue}>
               {activeOutfit && <img src={activeOutfit.image} alt={activeOutfit.name} className={styles.headerOutfitImage} />}
-              <span className={styles.value}>{user.unlockedOutfit}</span>
+              <span className={styles.value}>{user.equippedOutfit}</span>
             </span>
           </div>
         </div>
